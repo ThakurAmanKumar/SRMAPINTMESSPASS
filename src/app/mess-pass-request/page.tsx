@@ -639,7 +639,7 @@ export default function MessPassRequestPage() {
                 <Phone size={28} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Query Support</h3>
-              <p className="text-gray-600 text-sm">Contact the admin portal for additional queries or support</p>
+              <p className="text-gray-600 text-sm">Contact the International Mess Committee for additional queries or support</p>
             </div>
           </div>
         </div>
