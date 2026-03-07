@@ -24,6 +24,8 @@ export default function IssuedPassesPage() {
   const [error, setError] = useState('');
   const [selectedPass, setSelectedPass] = useState<Pass | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
   // Fetch passes
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function IssuedPassesPage() {
   useEffect(() => {
     if (!searchQuery) {
       setFilteredPasses(passes);
+      setCurrentPage(1);
       return;
     }
 
@@ -62,7 +65,13 @@ export default function IssuedPassesPage() {
         pass.issueId.toLowerCase().includes(query)
     );
     setFilteredPasses(filtered);
+    setCurrentPage(1);
   }, [searchQuery, passes]);
+
+  // Calculate paginated passes
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedPasses = filteredPasses.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(filteredPasses.length / itemsPerPage);
 
   // Handle JPG download
   const handleDownloadJPG = async (pass: Pass) => {
@@ -908,14 +917,14 @@ export default function IssuedPassesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPasses.map((pass, index) => (
+                    {paginatedPasses.map((pass, index) => (
                       <tr
                         key={pass._id}
                         className={`border-b border-gray-300 hover:bg-primary hover:bg-opacity-5 transition-all duration-200 ${
                           index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                         }`}
                       >
-                        <td className="px-4 py-5 text-center text-sm font-bold text-gray-800 border-r border-gray-200">{index + 1}</td>
+                        <td className="px-4 py-5 text-center text-sm font-bold text-gray-800 border-r border-gray-200">{startIndex + index + 1}</td>
                         <td className="px-6 py-5 border-r border-gray-200">
                           <div className="flex items-center">
                             <img
@@ -969,13 +978,51 @@ export default function IssuedPassesPage() {
             </div>
           )}
 
-          {/* Footer Stats */}
+          {/* Footer Stats and Pagination */}
           {filteredPasses.length > 0 && (
-            <div className="px-4 lg:px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-sm">
-              <p className="text-gray-600">
-                Showing <span className="font-semibold text-gray-900">{filteredPasses.length}</span> of{' '}
-                <span className="font-semibold text-gray-900">{passes.length}</span> passes
-              </p>
+            <div className="px-4 lg:px-6 py-6 bg-gray-50 border-t border-gray-200">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <p className="text-gray-600 text-sm">
+                  Showing <span className="font-semibold text-gray-900">{startIndex + 1}</span> to{' '}
+                  <span className="font-semibold text-gray-900">{Math.min(startIndex + itemsPerPage, filteredPasses.length)}</span> of{' '}
+                  <span className="font-semibold text-gray-900">{filteredPasses.length}</span> passes
+                </p>
+
+                {/* Pagination Controls */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    Previous
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-2 text-sm font-medium rounded-lg transition ${
+                          currentPage === page
+                            ? 'bg-primary text-white'
+                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
