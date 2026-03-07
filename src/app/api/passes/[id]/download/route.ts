@@ -56,7 +56,7 @@ export async function GET(
     
     const jpgBuffer = await page.screenshot({
       type: 'jpeg',
-      quality: 95,
+      quality: 100,
       fullPage: false,
     });
 
