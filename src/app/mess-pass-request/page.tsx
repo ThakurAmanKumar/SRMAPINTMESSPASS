@@ -664,7 +664,7 @@ export default function MessPassRequestPage() {
                   <Mail size={24} />
                 </div>
                 <h3 className="font-semibold mb-2">Email</h3>
-                <p className="text-white/80 text-sm">admin@srmap.edu.in</p>
+                <p className="text-white/80 text-sm">international.mc@srmap.edu.in</p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
@@ -672,7 +672,7 @@ export default function MessPassRequestPage() {
                   <Phone size={24} />
                 </div>
                 <h3 className="font-semibold mb-2">Phone</h3>
-                <p className="text-white/80 text-sm">+91 12345 67890</p>
+                <p className="text-white/80 text-sm">+91-7042190865</p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
