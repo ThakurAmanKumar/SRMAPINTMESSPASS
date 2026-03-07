@@ -11,13 +11,24 @@ export async function GET(
   try {
     await connectDB();
 
-    const pass = await Pass.findOne({
-      $or: [
-        { issueId: params.id },
-        { _id: params.id }
-      ],
-      status: 'approved'
-    });
+    // Check if id is an issueId format (starts with SRMAPIM)
+    let pass;
+    if (params.id.startsWith('SRMAPIM')) {
+      pass = await Pass.findOne({
+        issueId: params.id,
+        status: 'approved'
+      });
+    } else {
+      // Try to find by _id
+      try {
+        pass = await Pass.findOne({
+          _id: params.id,
+          status: 'approved'
+        });
+      } catch (e) {
+        pass = null;
+      }
+    }
 
     if (!pass) {
       return NextResponse.json(
@@ -50,7 +61,7 @@ export async function GET(
 function generatePassHTML(pass: any): string {
   const issuedDate = new Date(pass.issuedDate).toLocaleDateString('en-IN', {
     year: 'numeric',
-    month: 'short',
+    month: 'long',
     day: 'numeric'
   });
 
@@ -78,238 +89,275 @@ function generatePassHTML(pass: any): string {
             padding: 20px;
         }
         
-        .pass-card {
-            width: 100%;
-            max-width: 600px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            color: white;
-            position: relative;
+        .pass-container {
+            width: 360px;
+            border: 4px solid #484622;
+            border-radius: 16px;
+            background-color: #efeee3;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
         }
         
-        .pass-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-            pointer-events: none;
-        }
-        
-        .pass-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header {
+        .pass-header {
+            background-color: #484622;
+            padding: 20px 16px;
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 20px;
         }
         
-        .logo-text {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .pass-type {
-            font-size: 14px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .student-photo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            border-radius: 10px;
-            border: 3px solid white;
-            overflow: hidden;
-            background: white;
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(239, 238, 227, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: #999;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 0 auto 12px;
         }
         
-        .student-photo img {
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        
+        .university-name {
+            color: #efeee3;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        
+        .pass-type {
+            color: #efeee3;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+        
+        .photo-section {
+            padding: 20px 16px;
+            text-align: center;
+            background-color: #efeee3;
+        }
+        
+        .photo-box {
+            width: 110px;
+            height: 130px;
+            margin: 0 auto;
+            border: 3px solid #484622;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(72, 70, 34, 0.15);
+        }
+        
+        .photo-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
         .student-info {
+            padding: 6px 16px 12px 16px;
             text-align: center;
-            margin-bottom: 25px;
+            background-color: #efeee3;
         }
         
-        .student-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        .info-field {
+            margin-bottom: 12px;
         }
         
-        .student-reg {
-            font-size: 16px;
-            opacity: 0.95;
-            letter-spacing: 0.5px;
-        }
-        
-        .divider {
-            height: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            margin: 20px 0;
-        }
-        
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .detail-item {
-            text-align: center;
-        }
-        
-        .detail-label {
-            font-size: 12px;
-            opacity: 0.85;
+        .info-label {
+            font-size: 8px;
+            font-weight: 700;
+            color: #484622;
+            letter-spacing: 1.2px;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
         }
         
-        .detail-value {
-            font-size: 16px;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
         }
         
-        .footer {
-            text-align: center;
-            border-top: 2px solid rgba(255, 255, 255, 0.3);
-            padding-top: 15px;
+        .reg-value {
+            font-size: 10px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+        }
+        
+        .authorization {
+            margin: 2px 12px 12px 12px;
+            padding: 14px 12px;
+            border: 2px solid #484622;
+            border-radius: 8px;
+            background-color: #efeee3;
+            box-shadow: 0 2px 8px rgba(72, 70, 34, 0.1);
+        }
+        
+        .auth-title {
             font-size: 11px;
-            opacity: 0.85;
-            line-height: 1.6;
+            font-weight: 700;
+            color: #484622;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
         }
         
-        .status-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 15px;
+        .auth-text {
+            font-size: 8.5px;
+            line-height: 1.7;
+            color: #333333;
+            text-align: justify;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+        }
+        
+        .contact-section {
+            padding: 8px 16px;
+            background-color: #efeee3;
+            text-align: center;
+            border-top: 1px solid #484622;
+        }
+        
+        .contact-label {
+            font-size: 6px;
+            font-weight: 700;
+            color: #484622;
+            letter-spacing: 0.6px;
+            margin-bottom: 3px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+        }
+        
+        .contact-name {
+            font-size: 7.5px;
+            font-weight: 700;
+            color: #484622;
+            letter-spacing: 0.2px;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        
+        .contact-email {
+            font-size: 6.5px;
+            font-weight: 600;
+            color: #484622;
+            letter-spacing: 0.1px;
+            line-height: 1.3;
+        }
+        
+        .pass-footer {
+            padding: 12px 16px;
+            background-color: #484622;
+            border-top: 2px solid #484622;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .footer-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .footer-label {
+            font-size: 8px;
+            font-weight: 700;
+            color: #efeee3;
+            letter-spacing: 0.6px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+        
+        .footer-value {
+            font-size: 12px;
+            font-weight: 700;
+            color: #efeee3;
+        }
+        
+        .footer-divider {
+            width: 1px;
+            height: 28px;
+            background-color: #efeee3;
+            opacity: 0.4;
         }
         
         @media print {
             body {
                 background: white;
             }
-            .pass-card {
+            .pass-container {
                 box-shadow: none;
-            }
-        }
-        
-        .print-button {
-            display: none;
-        }
-        
-        @media (max-width: 600px) {
-            .pass-card {
-                padding: 25px;
-            }
-            
-            .logo-text {
-                font-size: 22px;
-            }
-            
-            .student-name {
-                font-size: 20px;
-            }
-            
-            .details-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="pass-card">
-        <div class="pass-content">
-            <div class="header">
-                <div class="logo-text">🎓 SRM University-AP</div>
-                <div class="pass-type">International Mess Pass</div>
+    <div class="pass-container">
+        <!-- Header -->
+        <div class="pass-header">
+            <div class="logo-circle">
+                <img src="https://raw.githubusercontent.com/ThakurAmanKumar/webIMG/refs/heads/main/img%20for%20site/SRM_University%2C_Andhra_Pradesh_logo.png" alt="Mess Logo" class="logo-img" onerror="this.style.display='none'">
             </div>
-            
-            <div style="text-align: center;">
-                <div class="status-badge">✓ VERIFIED & APPROVED</div>
+            <div class="university-name">SRM UNIVERSITY AP</div>
+            <div class="pass-type">INTERNATIONAL MESS ACCESS PASS</div>
+        </div>
+        
+        <!-- Photo Section -->
+        <div class="photo-section">
+            <div class="photo-box">
+                <img src="${pass.photoUrl}" alt="${pass.fullName}">
             </div>
-            
-            <div class="student-photo">
-                ${pass.photoUrl ? `<img src="${pass.photoUrl}" alt="Student Photo" />` : 'No Photo'}
+        </div>
+        
+        <!-- Student Info -->
+        <div class="student-info">
+            <div class="info-field">
+                <div class="info-label">Student Name</div>
+                <div class="info-value">${pass.fullName}</div>
             </div>
-            
-            <div class="student-info">
-                <div class="student-name">${pass.fullName}</div>
-                <div class="student-reg">${pass.regNumber}</div>
+            <div class="info-field">
+                <div class="info-label">Registration Number</div>
+                <div class="reg-value">${pass.regNumber}</div>
             </div>
-            
-            <div class="divider"></div>
-            
-            <div class="details-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Issue ID</div>
-                    <div class="detail-value">${pass.issueId}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Issued Date</div>
-                    <div class="detail-value">${issuedDate}</div>
-                </div>
+        </div>
+        
+        <!-- Authorization Block -->
+        <div class="authorization">
+            <div class="auth-title">✦ Authorization ✦</div>
+            <div class="auth-text">${pass.authorizationText}</div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-label">Contact</div>
+            <div class="contact-name">International Mess Committee</div>
+            <div class="contact-email"><span style="font-weight: 700;">E-mail :</span> international.mc@srmap.edu.in</div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="pass-footer">
+            <div class="footer-item">
+                <div class="footer-label">Issue ID</div>
+                <div class="footer-value">${pass.issueId}</div>
             </div>
-            
-            <div class="divider"></div>
-            
-            <div class="footer">
-                <p>${pass.authorizationText || 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.'}</p>
-                <p style="margin-top: 10px; opacity: 0.7;">
-                    Valid for the current academic session<br>
-                    Present this pass at the International Mess
-                </p>
+            <div class="footer-divider"></div>
+            <div class="footer-item">
+                <div class="footer-label">Issued Date</div>
+                <div class="footer-value">${issuedDate}</div>
             </div>
         </div>
     </div>
-    
-    <script>
-        // Auto-print on load
-        window.addEventListener('load', function() {
-            if (window.location.hash !== '#noprint') {
-                setTimeout(function() {
-                    window.print();
-                }, 500);
-            }
-        });
-    </script>
 </body>
 </html>
   `;
