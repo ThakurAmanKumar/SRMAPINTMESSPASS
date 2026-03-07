@@ -34,6 +34,7 @@ export async function GET(
         email: passRequest.email,
         status: passRequest.status,
         rejectionReason: passRequest.rejectionReason,
+        issueId: passRequest.issueId,
         submittedAt: passRequest.submittedAt,
         approvedAt: passRequest.approvedAt,
         rejectedAt: passRequest.rejectedAt,

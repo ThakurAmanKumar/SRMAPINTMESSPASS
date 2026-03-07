@@ -173,7 +173,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #484622 0%, #5d5a2f 100%)' }}>
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8">

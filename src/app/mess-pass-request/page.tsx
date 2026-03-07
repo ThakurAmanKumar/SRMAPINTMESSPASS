@@ -574,18 +574,40 @@ export default function MessPassRequestPage() {
                 </div>
 
                 {statusData.status === 'approved' && (
-                  <div className="bg-gradient-to-r from-green-100 to-green-50 border-l-4 border-green-500 rounded-xl p-6 mt-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-green-500 rounded-full p-2 text-white flex-shrink-0">
-                        <CheckCircle size={20} />
-                      </div>
-                      <div>
-                        <p className="text-green-900 font-bold text-lg mb-2">Your Pass Request Approved!</p>
-                        <p className="text-green-800 text-sm">
-                          Your pass will be sent to <span className="font-bold">{statusData.email}</span> within 24 hours. Check your email for further instructions.
-                        </p>
+                  <div className="mt-6 space-y-4">
+                    <div className="bg-gradient-to-r from-green-100 to-green-50 border-l-4 border-green-500 rounded-xl p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="bg-green-500 rounded-full p-2 text-white flex-shrink-0">
+                          <CheckCircle size={20} />
+                        </div>
+                        <div>
+                          <p className="text-green-900 font-bold text-lg mb-2">Your Pass Request Approved!</p>
+                          <p className="text-green-800 text-sm">
+                            Your pass will be sent to <span className="font-bold">{statusData.email}</span> within 24 hours. Check your email for further instructions.
+                          </p>
+                        </div>
                       </div>
                     </div>
+                    
+                    {statusData.issueId ? (
+                      <a
+                        href={`/api/passes/${statusData.issueId}/download#noprint`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 w-full justify-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-base"
+                      >
+                        <FileText size={20} />
+                        Download Pass (JPG)
+                      </a>
+                    ) : (
+                      <button
+                        disabled
+                        className="inline-flex items-center gap-2 w-full justify-center bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg text-base opacity-50 cursor-not-allowed"
+                      >
+                        <FileText size={20} />
+                        Pass Not Yet Generated
+                      </button>
+                    )}
                   </div>
                 )}
 

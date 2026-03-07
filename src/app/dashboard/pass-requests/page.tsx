@@ -449,6 +449,8 @@ export default function PassRequestsAdminPage() {
         return <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold"><X size={16} /> Rejected</span>;
       case 'pending':
         return <span className="inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold"><Clock size={16} /> Pending</span>;
+      default:
+        return <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold"><AlertCircle size={16} /> Unknown</span>;
     }
   };
 

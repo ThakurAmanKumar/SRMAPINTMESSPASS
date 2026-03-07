@@ -9,6 +9,7 @@ export interface IPassRequest extends Document {
   reason: string;
   status: 'pending' | 'approved' | 'rejected';
   rejectionReason?: string;
+  issueId?: string;
   submittedAt: Date;
   approvedAt?: Date;
   rejectedAt?: Date;
