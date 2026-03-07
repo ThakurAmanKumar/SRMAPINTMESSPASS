@@ -23,7 +23,7 @@ export interface PassRejectedEmailParams {
  * Generate HTML email for approved pass
  */
 export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): string {
-  const statusLink = 'https://srmapimpass.vercel.app/mess-pass-request#status';
+  const statusLink = 'https://srmapimpass.indevs.in/mess-pass-request#status';
   
   return `
     <!DOCTYPE html>
@@ -54,13 +54,13 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
       </head>
       <body>
         <div class="container">
-          {/* Header */}
+          <!-- Header -->
           <div class="header">
             <h1>✓ Pass Approved!</h1>
             <p>Your International Mess Pass Request Has Been Approved</p>
           </div>
 
-          {/* Content */}
+          <!-- Content -->
           <div class="content">
             <p>Dear <strong>${params.studentName}</strong>,</p>
             
@@ -68,7 +68,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
 
             <div class="success-badge">PASS VERIFIED ✓ APPROVED</div>
 
-            {/* Details Section */}
+            <!-- Details Section -->
             <div class="details-section">
               <p style="margin: 0 0 15px 0; font-weight: bold; color: #10b981;">Pass Details:</p>
               <div class="detail-row">
@@ -93,13 +93,13 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
               </div>
             </div>
 
-            {/* Action Section */}
+            <!-- Action Section -->
             <div class="button-section">
               <p style="margin: 0 0 15px 0; font-weight: bold;">Download your pass now:</p>
-              <a href="${statusLink}" class="action-button">View & Download Pass</a>
+              <a href="${statusLink}" class="action-button" style="color: white !important;">View & Download Pass</a>
             </div>
 
-            {/* Info Box */}
+            <!-- Info Box -->
             <div class="info-box">
               <p><strong>📌 Next Steps:</strong></p>
               <p>1. Visit: <a href="${statusLink}" style="color: #f59e0b; text-decoration: none;">${statusLink}</a></p>
@@ -108,7 +108,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
               <p>4. Present your pass at the International Mess for access</p>
             </div>
 
-            {/* Committee Note */}
+            <!-- Committee Note -->
             <div class="committee-note">
               <p style="margin: 0; font-size: 13px;"><strong>📋 Authorization:</strong> As per verification by the International Mess Committee, SRM University-AP, you are now authorized to access and use the services of the International Mess.</p>
             </div>
@@ -118,7 +118,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
             <p><strong>Best Regards,</strong><br>SRMAP International Mess Committee<br>SRM University-AP</p>
           </div>
 
-          {/* Footer */}
+          <!-- Footer -->
           <div class="footer">
             <p>This is an automated email from SRMAP International Mess Pass System.</p>
             <p>© 2026 SRM University-AP. All rights reserved.</p>
@@ -201,13 +201,13 @@ export function getPassRejectedEmailHTML(params: PassRejectedEmailParams): strin
       </head>
       <body>
         <div class="container">
-          {/* Header */}
+          <!-- Header -->
           <div class="header">
             <h1>Request Not Approved</h1>
             <p>Your International Mess Pass Request Status Update</p>
           </div>
 
-          {/* Content */}
+          <!-- Content -->
           <div class="content">
             <p>Dear <strong>${params.studentName}</strong>,</p>
             
@@ -215,7 +215,7 @@ export function getPassRejectedEmailHTML(params: PassRejectedEmailParams): strin
 
             <div class="rejected-badge">REQUEST REJECTED</div>
 
-            {/* Details Section */}
+            <!-- Details Section -->
             <div class="details-section">
               <p style="margin: 0 0 15px 0; font-weight: bold; color: #ef4444;">Request Details:</p>
               <div class="detail-row">
@@ -232,7 +232,7 @@ export function getPassRejectedEmailHTML(params: PassRejectedEmailParams): strin
               </div>
             </div>
 
-            {/* Rejection Reason */}
+            <!-- Rejection Reason -->
             ${params.rejectionReason ? `
             <div class="reason-box">
               <p style="margin: 0 0 10px 0; font-weight: bold;">Reason for Rejection:</p>  
@@ -240,7 +240,7 @@ export function getPassRejectedEmailHTML(params: PassRejectedEmailParams): strin
             </div>
             ` : ''}
 
-            {/* Contact Section */}
+            <!-- Contact Section -->
             <div class="contact-box">
               <p style="margin: 0 0 10px 0; font-weight: bold;">❓ Need Help?</p>
               <p>If you believe this rejection was made in error or would like more information about the reason, please contact the International Mess Committee directly.</p>
@@ -252,7 +252,7 @@ export function getPassRejectedEmailHTML(params: PassRejectedEmailParams): strin
             <p><strong>Best Regards,</strong><br>SRMAP International Mess Committee<br>SRM University-AP</p>
           </div>
 
-          {/* Footer */}
+          <!-- Footer -->
           <div class="footer">
             <p>This is an automated email from SRMAP International Mess Pass System.</p>
             <p>© 2026 SRM University-AP. All rights reserved.</p>

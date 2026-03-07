@@ -57,7 +57,7 @@ export async function sendEmail(options: EmailOptions) {
     const transporter = getTransporter();
 
     const mailOptions = {
-      from: `SRMAP International Mess Pass <${process.env.SMTP_USER}>`,
+      from: `SRMAP MESS PASS <${process.env.SMTP_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
