@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Search, Check, X, Clock, AlertCircle, Mail, Printer, FileSpreadsheet, Download, Filter, Trash2 } from 'lucide-react';
+import { Search, Check, X, Clock, AlertCircle, Mail, Printer, FileSpreadsheet, Download, Filter, Trash2, Eye } from 'lucide-react';
 
 interface PassRequest {
   _id: string;
@@ -751,6 +751,13 @@ export default function PassRequestsAdminPage() {
                         </td>
                         <td className="px-6 py-5 text-sm">
                           <div className="flex items-center justify-center space-x-2">
+                            <button
+                              onClick={() => setSelectedRequest(request)}
+                              className="inline-flex items-center justify-center w-9 h-9 rounded-lg text-primary hover:bg-primary hover:bg-opacity-10 transition"
+                              title="View Details"
+                            >
+                              <Eye size={18} />
+                            </button>
                             {request.status === 'pending' && (
                               <>
                                 <button
