@@ -896,24 +896,24 @@ export default function PassRequestsAdminPage() {
         {selectedRequest && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-100 max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-[#484622] to-[#5a5830] border-b-4 sticky top-0" style={{ borderColor: '#484622' }}>
-                <div className="px-8 py-6 flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">Pass Request Details</h2>
-                    <p className="text-gray-200 text-sm mt-1">Request ID: {selectedRequest.requestNumber}</p>
+              <div className="bg-gradient-to-r from-[#484622] to-[#5a5830] border-b-4 sticky top-0 z-10" style={{ borderColor: '#484622' }}>
+                <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-xl md:text-2xl font-bold text-white truncate">Pass Request Details</h2>
+                    <p className="text-gray-200 text-xs md:text-sm mt-1 truncate">Request ID: {selectedRequest.requestNumber}</p>
                   </div>
                   <button
                     onClick={() => setSelectedRequest(null)}
-                    className="text-white hover:bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center transition"
+                    className="text-white hover:bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center transition flex-shrink-0"
                   >
                     ✕
                   </button>
                 </div>
               </div>
 
-              <div className="p-8 space-y-6">
+              <div className="p-4 md:p-8 space-y-6">
                 {/* Photo */}
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-2">
                   <div className="relative">
                     <div className="w-32 h-40 rounded-xl overflow-hidden border-4" style={{ borderColor: '#484622' }}>
                       <img
@@ -933,18 +933,18 @@ export default function PassRequestsAdminPage() {
                 </div>
 
                 {/* Student Information */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Full Name</label>
-                    <p className="text-gray-900 font-semibold text-lg">{selectedRequest.fullName}</p>
+                    <p className="text-gray-900 font-semibold text-base md:text-lg">{selectedRequest.fullName}</p>
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Registration Number</label>
-                    <p className="text-gray-900 font-semibold text-lg">{selectedRequest.registrationNumber}</p>
+                    <p className="text-gray-900 font-semibold text-base md:text-lg">{selectedRequest.registrationNumber}</p>
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Email</label>
-                    <p className="text-gray-900 font-semibold break-all">{selectedRequest.email}</p>
+                    <p className="text-gray-900 font-semibold break-all text-sm md:text-base">{selectedRequest.email}</p>
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Submitted Date</label>
@@ -977,7 +977,7 @@ export default function PassRequestsAdminPage() {
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-4">
+                <div className="flex flex-col md:flex-row gap-3 pt-4">
                   {selectedRequest.status === 'pending' && (
                     <>
                       <button
