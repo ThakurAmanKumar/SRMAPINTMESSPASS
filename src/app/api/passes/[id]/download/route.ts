@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Pass from '@/models/Pass';
 import connectDB from '@/lib/mongodb';
+import puppeteer from 'puppeteer';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  let browser;
   try {
     await connectDB();
 
@@ -37,20 +39,42 @@ export async function GET(
       );
     }
 
-    // Generate HTML for the pass that can be rendered as JPG
+    // Generate HTML for the pass
     const passHTML = generatePassHTML(pass);
 
-    // Return as HTML with instructions for download
-    // Client-side can use html2canvas or similar to convert to JPG
-    return new NextResponse(passHTML, {
+    // Convert HTML to JPG using Puppeteer
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
+    const page = await browser.newPage();
+    await page.setContent(passHTML, { waitUntil: 'networkidle2' });
+    
+    // Set viewport to match pass card dimensions
+    await page.setViewport({ width: 360, height: 800 });
+    
+    const jpgBuffer = await page.screenshot({
+      type: 'jpeg',
+      quality: 95,
+      fullPage: false,
+    });
+
+    await browser.close();
+
+    // Return as JPG file
+    return new NextResponse(jpgBuffer, {
       headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Disposition': `attachment; filename="Pass_${pass.issueId}.html"`,
+        'Content-Type': 'image/jpeg',
+        'Content-Disposition': `attachment; filename="Pass_${pass.issueId}.jpg"`,
         'Cache-Control': 'no-store',
       },
     });
   } catch (error: any) {
     console.error('Error downloading pass:', error);
+    if (browser) {
+      await browser.close();
+    }
     return NextResponse.json(
       { error: error.message || 'Failed to download pass' },
       { status: 500 }
