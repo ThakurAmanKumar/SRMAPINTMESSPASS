@@ -51,6 +51,11 @@ const PassRequestSchema = new Schema<IPassRequest>({
     type: String,
     default: null,
   },
+  issueId: {
+    type: String,
+    sparse: true,
+    index: true,
+  },
   submittedAt: {
     type: Date,
     default: Date.now,
