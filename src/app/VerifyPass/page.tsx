@@ -136,7 +136,7 @@ export default function VerifyPassPage() {
                   value={inputValue}
                   onChange={handleInputChange}
                   placeholder="01"
-                  maxLength="5"
+                  maxLength={5}
                   className="w-full pl-32 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#484622]/30 focus:border-[#484622] transition-all bg-gray-50 focus:bg-white text-gray-800 font-mono text-lg font-bold"
                 />
               </div>
