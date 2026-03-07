@@ -47,7 +47,6 @@ export async function GET(
     // Use @sparticuz/chromium for serverless environments (Vercel)
     browser = await puppeteer.launch({
       args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
       headless: true,
     });
