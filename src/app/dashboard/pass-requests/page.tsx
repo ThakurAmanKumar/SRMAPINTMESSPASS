@@ -657,6 +657,13 @@ export default function PassRequestsAdminPage() {
                     </div>
                     
                     <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      <button
+                        onClick={() => setSelectedRequest(request)}
+                        className="flex-1 flex items-center justify-center gap-2 bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-lg text-sm font-semibold hover:bg-opacity-20 transition"
+                      >
+                        <Eye size={16} />
+                        View
+                      </button>
                       {request.status === 'pending' && (
                         <>
                           <button
