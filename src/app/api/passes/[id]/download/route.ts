@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Pass from '@/models/Pass';
 import connectDB from '@/lib/mongodb';
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +8,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  let browser;
   try {
     await connectDB();
 
@@ -40,47 +37,19 @@ export async function GET(
       );
     }
 
-    // Generate HTML for the pass
+    // Generate HTML for the pass with print-friendly styles
     const passHTML = generatePassHTML(pass);
 
-    // Convert HTML to JPG using Puppeteer
-    // Use @sparticuz/chromium for serverless environments (Vercel)
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: true,
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(passHTML, { waitUntil: 'networkidle2' });
-    
-    // Set viewport to match pass card dimensions with 2x scale for ultra-HD quality
-    await page.setViewport({ width: 360, height: 800, deviceScaleFactor: 2 });
-    
-    const jpgBuffer = await page.screenshot({
-      type: 'jpeg',
-      quality: 100,
-      fullPage: false,
-    });
-
-    await browser.close();
-
-    // Convert Buffer to Uint8Array for NextResponse
-    const uint8Array = new Uint8Array(jpgBuffer as any);
-    
-    // Return as JPG file
-    return new NextResponse(uint8Array.buffer, {
+    // Return HTML file that can be printed to PDF or saved as image
+    return new NextResponse(passHTML, {
       headers: {
-        'Content-Type': 'image/jpeg',
-        'Content-Disposition': `attachment; filename="Pass_${pass.issueId}.jpg"`,
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Disposition': `attachment; filename="Pass_${pass.issueId}.html"`,
         'Cache-Control': 'no-store',
       },
     });
   } catch (error: any) {
     console.error('Error downloading pass:', error);
-    if (browser) {
-      await browser.close();
-    }
     return NextResponse.json(
       { error: error.message || 'Failed to download pass' },
       { status: 500 }
@@ -112,11 +81,30 @@ function generatePassHTML(pass: any): string {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background: #f0f0f0;
             padding: 20px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 360px;
+            font-size: 12px;
+            color: #1565c0;
+            line-height: 1.5;
+        }
+        
+        .instructions strong {
+            display: block;
+            margin-bottom: 6px;
         }
         
         .pass-container {
@@ -325,14 +313,23 @@ function generatePassHTML(pass: any): string {
         @media print {
             body {
                 background: white;
+                padding: 0;
+            }
+            .instructions {
+                display: none;
             }
             .pass-container {
                 box-shadow: none;
+                margin: 0;
             }
         }
     </style>
 </head>
 <body>
+    <div class="instructions">
+        <strong>📋 How to Save This Pass:</strong>
+        Press <strong>Ctrl+P</strong> (or <strong>Cmd+P</strong>) to Print, then choose "Save as PDF" or use "Save as Image" option in your browser.
+    </div>
     <div class="pass-container">
         <!-- Header -->
         <div class="pass-header">
