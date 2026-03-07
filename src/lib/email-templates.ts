@@ -104,8 +104,8 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
               <p><strong>📌 Next Steps:</strong></p>
               <p>1. Visit: <a href="${statusLink}" style="color: #f59e0b; text-decoration: none;">${statusLink}</a></p>
               <p>2. Check your status using Request Number: <strong>${params.requestNumber}</strong></p>
-              <p>3. Download your pass (available as JPG)</p>
-              <p>4. Present your pass at the International Mess for access</p>
+              <p>3. Download your pass (HTML file with print-to-PDF option)</p>
+              <p>4. Print to PDF or save as image, then present at the International Mess</p>
             </div>
 
             <!-- Committee Note -->
@@ -133,7 +133,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
  * Generate text email for approved pass
  */
 export function getPassApprovedEmailText(params: PassApprovedEmailParams): string {
-  const statusLink = 'https://srmapimpass.vercel.app/mess-pass-request#status';
+  const statusLink = 'https://srmapimpass.indevs.in/mess-pass-request#status';
   
   return `
 INTERNATIONAL MESS PASS - APPROVED
@@ -156,8 +156,9 @@ Use Request Number: ${params.requestNumber}
 NEXT STEPS:
 1. Go to the link above
 2. Enter your request number
-3. Download your pass (JPG format)
-4. Present it at the International Mess
+3. Download your pass (printable HTML file)
+4. Print to PDF or save as image
+5. Present it at the International Mess
 
 Authorization: As per verification by the International Mess Committee, SRM University-AP, you are now authorized to access the International Mess services.
 
