@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
-import { Shield, CheckCircle, AlertCircle, X, Search, ImageIcon } from 'lucide-react';
+import { Shield, AlertCircle, Search } from 'lucide-react';
+import { VerifyPassCard } from '@/components/VerifyPassCard';
 
 export default function VerifyPassPage() {
   const [inputValue, setInputValue] = useState('');
@@ -57,14 +57,6 @@ export default function VerifyPassPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   };
 
   return (
@@ -154,8 +146,8 @@ export default function VerifyPassPage() {
               </p>
             </div>
 
-            {/* Error Messages */}
-            {verificationError && verificationStatus !== 'verified' && (
+            {/* Error Messages - Only show if not using card component */}
+            {verificationError && verificationStatus !== 'verified' && !['not_found', 'not_approved', 'error'].includes(verificationStatus) && (
               <div
                 className={`rounded-xl p-4 flex items-start gap-3 ${
                   verificationStatus === 'not_found'
@@ -169,7 +161,7 @@ export default function VerifyPassPage() {
                   {verificationStatus === 'not_found' || verificationStatus === 'not_approved' ? (
                     <AlertCircle size={20} />
                   ) : (
-                    <X size={20} />
+                    <AlertCircle size={20} />
                   )}
                 </span>
                 <p className="font-medium text-sm">{verificationError}</p>
@@ -196,76 +188,20 @@ export default function VerifyPassPage() {
             </button>
           </form>
 
-          {/* Success Result */}
-          {verificationStatus === 'verified' && verificationData && (
-            <div className="space-y-6 animate-fade-in">
-              {/* Status Badge */}
-              <div className="bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 rounded-2xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-green-500 rounded-full p-4 shadow-lg">
-                    <CheckCircle size={32} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-green-900 font-bold text-xl">PASS VERIFIED</p>
-                    <p className="text-green-700 text-sm">Valid Mess Pass Detected</p>
-                  </div>
-                </div>
-              </div>
+          {/* Results using VerifyPassCard */}
+          {verificationStatus !== 'idle' && verificationStatus !== 'pending' && (
+            <div className="mt-8">
+              <VerifyPassCard
+                status={verificationStatus}
+                studentName={verificationData?.studentName}
+                registrationNumber={verificationData?.registrationNumber}
+                issueId={verificationData?.issueId}
+                issuedDate={verificationData?.issuedDate}
+                photoUrl={verificationData?.photoUrl}
+                errorMessage={verificationError}
+              />
 
-              {/* Pass Details */}
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border-2 border-gray-200 space-y-4">
-                <h3 className="text-lg font-bold text-[#484622] mb-4 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#484622] rounded-full"></span>
-                  Pass Details
-                </h3>
-
-                {/* Photo Display */}
-                {verificationData.photoUrl && (
-                  <div className="flex justify-center mb-6">
-                    <div className="relative w-40 h-48 bg-gray-200 rounded-xl overflow-hidden shadow-lg border-4 border-white">
-                      <Image
-                        src={verificationData.photoUrl}
-                        alt={verificationData.studentName}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-white rounded-xl p-4 border border-gray-100">
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-1">Student Name</p>
-                    <p className="text-lg font-bold text-gray-900">{verificationData.studentName}</p>
-                  </div>
-
-                  <div className="bg-white rounded-xl p-4 border border-gray-100">
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-1">Registration Number</p>
-                    <p className="text-lg font-bold text-gray-900 font-mono">{verificationData.registrationNumber}</p>
-                  </div>
-
-                  <div className="bg-white rounded-xl p-4 border border-gray-100">
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-1">Issue ID</p>
-                    <p className="text-lg font-bold text-gray-900 font-mono tracking-wider">{verificationData.issueId}</p>
-                  </div>
-
-                  <div className="bg-white rounded-xl p-4 border border-gray-100">
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-1">Issued Date</p>
-                    <p className="text-lg font-bold text-gray-900">{formatDate(verificationData.issuedDate)}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Info Message */}
-              <div className="bg-blue-50 border-l-4 border-blue-500 rounded-xl p-4 flex items-start gap-3">
-                <AlertCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
-                <p className="text-blue-700 text-sm">
-                  This student has been verified and has a valid International Mess Pass. They are authorized to access the International Mess facilities.
-                </p>
-              </div>
-
-              {/* Action Button */}
+              {/* Reset Button */}
               <button
                 onClick={() => {
                   setInputValue('');
@@ -273,77 +209,9 @@ export default function VerifyPassPage() {
                   setVerificationStatus('idle');
                   setVerificationError('');
                 }}
-                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
+                className="w-full mt-6 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                Verify Another Pass
-              </button>
-            </div>
-          )}
-
-          {/* Invalid Pass Result */}
-          {verificationStatus === 'not_found' && !isLoading && (
-            <div className="space-y-6 animate-fade-in">
-              <div className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-300 rounded-2xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-red-500 rounded-full p-4 shadow-lg">
-                    <X size={32} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-red-900 font-bold text-xl">Invalid Pass</p>
-                    <p className="text-red-700 text-sm">Pass number not found</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-red-50 border-l-4 border-red-500 rounded-xl p-4">
-                <p className="text-red-700 text-sm">
-                  This pass number does not exist in the system. Please verify the Issue ID and try again.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  setInputValue('');
-                  setVerificationStatus('idle');
-                  setVerificationError('');
-                }}
-                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {/* Not Approved Result */}
-          {verificationStatus === 'not_approved' && !isLoading && (
-            <div className="space-y-6 animate-fade-in">
-              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-2xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-yellow-500 rounded-full p-4 shadow-lg">
-                    <AlertCircle size={32} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-yellow-900 font-bold text-xl">Pass Not Approved Yet</p>
-                    <p className="text-yellow-700 text-sm">Request under review</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-xl p-4">
-                <p className="text-yellow-700 text-sm">
-                  This request is still under review by the International Mess Committee. The pass has not been approved yet. Please check back later.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  setInputValue('');
-                  setVerificationStatus('idle');
-                  setVerificationError('');
-                }}
-                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Try Again
+                {verificationStatus === 'verified' ? 'Verify Another Pass' : 'Try Again'}
               </button>
             </div>
           )}
@@ -355,7 +223,7 @@ export default function VerifyPassPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex gap-4">
               <div className="bg-[#484622]/10 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <SearchIcon size={24} className="text-[#484622]" />
+                <Search size={24} className="text-[#484622]" />
               </div>
               <div>
                 <p className="font-semibold text-gray-900 text-sm mb-1">How to Use</p>
@@ -399,7 +267,3 @@ export default function VerifyPassPage() {
   );
 }
 
-// Helper component for icons in help section
-function SearchIcon(props: any) {
-  return <Search {...props} />;
-}
