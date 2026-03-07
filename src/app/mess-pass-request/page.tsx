@@ -211,39 +211,6 @@ export default function MessPassRequestPage() {
 
       {/* Main Content */}
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-16">
-        {/* Info Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className={`group bg-white rounded-2xl shadow-md p-8 border-t-4 border-[#484622] hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0ms' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-[#484622] font-poppins">Quick Submit</h3>
-              <div className="bg-[#484622]/10 p-3 rounded-xl group-hover:bg-[#484622] group-hover:text-white transition-all duration-300">
-                <Upload size={24} />
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm leading-relaxed">Fill in your details and submit your pass request in just a few minutes with our streamlined process.</p>
-          </div>
-
-          <div className={`group bg-white rounded-2xl shadow-md p-8 border-t-4 border-[#484622] hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-[#484622] font-poppins">Track Status</h3>
-              <div className="bg-[#484622]/10 p-3 rounded-xl group-hover:bg-[#484622] group-hover:text-white transition-all duration-300">
-                <Activity size={24} />
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm leading-relaxed">Check your request status anytime using your unique request number with real-time updates.</p>
-          </div>
-
-          <div className={`group bg-white rounded-2xl shadow-md p-8 border-t-4 border-[#484622] hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-[#484622] font-poppins">Fast Response</h3>
-              <div className="bg-[#484622]/10 p-3 rounded-xl group-hover:bg-[#484622] group-hover:text-white transition-all duration-300">
-                <Zap size={24} />
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm leading-relaxed">Get approval updates within 24-48 hours via email notification directly to your inbox.</p>
-          </div>
-        </div>
-
         {/* Section Title */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-[#484622] font-poppins mb-4">
