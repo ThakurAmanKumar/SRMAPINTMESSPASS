@@ -960,8 +960,34 @@ export default function PassRequestsAdminPage() {
                   </div>
                 )}
 
-                {/* Close Button */}
+                {/* Action Buttons */}
                 <div className="flex gap-3 pt-4">
+                  {selectedRequest.status === 'pending' && (
+                    <>
+                      <button
+                        onClick={() => {
+                          handleApprove(selectedRequest);
+                          setSelectedRequest(null);
+                        }}
+                        disabled={processingId === selectedRequest._id}
+                        className="flex-1 text-white font-bold py-3 rounded-lg transition hover:opacity-90 disabled:opacity-50"
+                        style={{ backgroundColor: '#4CAF50' }}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleRejectClick(selectedRequest);
+                          setSelectedRequest(null);
+                        }}
+                        disabled={processingId === selectedRequest._id}
+                        className="flex-1 text-white font-bold py-3 rounded-lg transition hover:opacity-90 disabled:opacity-50"
+                        style={{ backgroundColor: '#c62828' }}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
                   <button
                     onClick={() => setSelectedRequest(null)}
                     className="flex-1 text-gray-900 font-bold py-3 rounded-lg transition border-2"
