@@ -248,7 +248,7 @@ function generatePassHTML(pass: any): string {
         }
         
         .contact-email {
-            font-size: 6.5px;
+            font-size: 7px;
             font-weight: 600;
             color: #484622;
             letter-spacing: 0.1px;
@@ -344,7 +344,7 @@ function generatePassHTML(pass: any): string {
         <div class="contact-section">
             <div class="contact-label">Contact</div>
             <div class="contact-name">International Mess Committee</div>
-            <div class="contact-email">E-mail : international.mc@srmap.edu.in</div>
+            <div class="contact-email">E-mail: international.mc@srmap.edu.in</div>
         </div>
         
         <!-- Footer -->
