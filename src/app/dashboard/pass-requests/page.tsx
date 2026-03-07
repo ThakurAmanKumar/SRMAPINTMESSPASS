@@ -884,6 +884,96 @@ export default function PassRequestsAdminPage() {
             </div>
           </div>
         )}
+
+        {/* View Details Modal */}
+        {selectedRequest && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-100 max-h-[90vh] overflow-y-auto">
+              <div className="bg-gradient-to-r from-[#484622] to-[#5a5830] border-b-4 sticky top-0" style={{ borderColor: '#484622' }}>
+                <div className="px-8 py-6 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">Pass Request Details</h2>
+                    <p className="text-gray-200 text-sm mt-1">Request ID: {selectedRequest.requestNumber}</p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedRequest(null)}
+                    className="text-white hover:bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-8 space-y-6">
+                {/* Photo */}
+                <div className="flex justify-center">
+                  <div className="w-32 h-40 rounded-xl overflow-hidden border-4" style={{ borderColor: '#484622' }}>
+                    <img
+                      src={selectedRequest.photoUrl}
+                      alt={selectedRequest.fullName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* Student Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Full Name</label>
+                    <p className="text-gray-900 font-semibold text-lg">{selectedRequest.fullName}</p>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Registration Number</label>
+                    <p className="text-gray-900 font-semibold text-lg">{selectedRequest.registrationNumber}</p>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Email</label>
+                    <p className="text-gray-900 font-semibold break-all">{selectedRequest.email}</p>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Submitted Date</label>
+                    <p className="text-gray-900 font-semibold">{new Date(selectedRequest.submittedAt).toLocaleDateString('en-IN')}</p>
+                  </div>
+                </div>
+
+                {/* Reason */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Reason for Request</label>
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <p className="text-gray-900 whitespace-pre-wrap">{selectedRequest.reason}</p>
+                  </div>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wide mb-2" style={{ color: '#484622' }}>Status</label>
+                  <div>{getStatusBadge(selectedRequest.status)}</div>
+                </div>
+
+                {/* Rejection Reason if any */}
+                {selectedRequest.rejectionReason && (
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wide mb-2 text-red-600">Rejection Reason</label>
+                    <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+                      <p className="text-red-900 whitespace-pre-wrap">{selectedRequest.rejectionReason}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Close Button */}
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => setSelectedRequest(null)}
+                    className="flex-1 text-gray-900 font-bold py-3 rounded-lg transition border-2"
+                    style={{ backgroundColor: '#efeee3', borderColor: '#484622', color: '#484622' }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedRoute>
   );
