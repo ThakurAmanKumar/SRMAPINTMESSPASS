@@ -458,15 +458,15 @@ export default function DashboardPage() {
                   <p className="text-gray-500 font-medium">No requests yet</p>
                 </div>
               ) : (
-                <div className="w-full">
-                  <table className="w-full border-collapse">
+                <div className="w-full overflow-x-auto md:overflow-x-visible">
+                  <table className="w-full border-collapse min-w-[600px]">
                     <thead>
                       <tr className="bg-gray-50 border-b-2 border-gray-300">
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Student</th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Registration</th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Request No.</th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Date Submitted</th>
-                        <th className="px-5 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                        <th className="px-3 md:px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Student</th>
+                        <th className="px-3 md:px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Registration</th>
+                        <th className="px-3 md:px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Request No.</th>
+                        <th className="px-3 md:px-5 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Date Submitted</th>
+                        <th className="px-3 md:px-5 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -476,32 +476,32 @@ export default function DashboardPage() {
                           className="hover:bg-yellow-50 transition-colors duration-150 cursor-pointer border-b border-gray-150"
                         >
                           {/* Student Name */}
-                          <td className="px-5 py-4 border-r border-gray-150">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-[#6b6b32] flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+                          <td className="px-3 md:px-5 py-3 md:py-4 border-r border-gray-150">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="w-8 md:w-9 h-8 md:h-9 rounded-full bg-gradient-to-br from-primary to-[#6b6b32] flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
                                 {request.fullName.charAt(0).toUpperCase()}
                               </div>
-                              <p className="font-semibold text-gray-900 text-sm">{request.fullName}</p>
+                              <p className="font-semibold text-gray-900 text-xs md:text-sm line-clamp-1">{request.fullName}</p>
                             </div>
                           </td>
 
                           {/* Registration Number */}
-                          <td className="px-5 py-4 border-r border-gray-150">
-                            <p className="text-sm text-gray-600 font-medium">{request.registrationNumber}</p>
+                          <td className="px-3 md:px-5 py-3 md:py-4 border-r border-gray-150">
+                            <p className="text-xs md:text-sm text-gray-600 font-medium line-clamp-1">{request.registrationNumber}</p>
                           </td>
 
                           {/* Request Number */}
-                          <td className="px-5 py-4 border-r border-gray-150">
-                            <p className="text-sm text-gray-500 font-mono">{request.requestNumber}</p>
+                          <td className="px-3 md:px-5 py-3 md:py-4 border-r border-gray-150">
+                            <p className="text-xs md:text-sm text-gray-500 font-mono line-clamp-1">{request.requestNumber}</p>
                           </td>
 
                           {/* Date */}
-                          <td className="px-5 py-4 border-r border-gray-150">
-                            <p className="text-sm text-gray-600">{new Date(request.submittedAt).toLocaleDateString('en-IN')}</p>
+                          <td className="px-3 md:px-5 py-3 md:py-4 border-r border-gray-150">
+                            <p className="text-xs md:text-sm text-gray-600">{new Date(request.submittedAt).toLocaleDateString('en-IN')}</p>
                           </td>
 
                           {/* Status */}
-                          <td className="px-5 py-4 text-center">
+                          <td className="px-3 md:px-5 py-3 md:py-4 text-center">
                             {getStatusBadge(request.status)}
                           </td>
                         </tr>
