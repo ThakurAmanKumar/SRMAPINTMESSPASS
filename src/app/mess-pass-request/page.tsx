@@ -283,9 +283,9 @@ export default function MessPassRequestPage() {
                   <Mail size={16} className="text-green-600 flex-shrink-0" />
                   <p className="text-green-700 text-sm"><strong>Committee notified!</strong> The committee will review your request shortly.</p>
                 </div>
-                <div className="bg-white border-2 border-green-400 rounded-xl p-6 mb-6 shadow-md">
-                  <p className="text-gray-600 text-sm mb-2">Your Request Number</p>
-                  <p className="text-4xl font-bold text-green-600 font-mono tracking-wider">{submissionSuccess}</p>
+                <div className="bg-white border-2 border-green-400 rounded-xl p-4 mb-6 shadow-md">
+                  <p className="text-gray-600 text-xs mb-2">Your Request Number</p>
+                  <p className="text-2xl font-bold text-green-600 font-mono tracking-wider">{submissionSuccess}</p>
                 </div>
                 <div className="bg-green-200 rounded-xl p-4 mb-6">
                   <p className="text-green-900 text-sm font-semibold flex items-center justify-center gap-2">
