@@ -4,6 +4,8 @@ import Pass from '@/models/Pass';
 import PassRequest from '@/models/PassRequest';
 import { verifyToken, getTokenFromRequest } from '@/lib/jwt';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Verify token

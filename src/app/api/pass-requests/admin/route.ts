@@ -4,6 +4,8 @@ import connectDB from '@/lib/mongodb';
 import { verifyAuth } from '@/lib/auth-middleware';
 import Admin from '@/models/Admin';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     // Verify admin authentication

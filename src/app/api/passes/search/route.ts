@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import Pass from '@/models/Pass';
 import { verifyToken, getTokenFromRequest } from '@/lib/jwt';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Verify token
