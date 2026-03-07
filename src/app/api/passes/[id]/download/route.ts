@@ -241,37 +241,36 @@ function generatePassHTML(pass: any): string {
         }
         
         .contact-section {
-            padding: 12px 16px;
+            padding: 8px 16px;
             background-color: #efeee3;
             text-align: center;
             border-top: 1px solid #484622;
-            border-bottom: 1px solid #484622;
         }
         
         .contact-label {
-            font-size: 7px;
+            font-size: 6px;
             font-weight: 700;
             color: #484622;
-            letter-spacing: 0.8px;
-            margin-bottom: 4px;
+            letter-spacing: 0.6px;
+            margin-bottom: 3px;
             text-transform: uppercase;
         }
         
         .contact-name {
-            font-size: 9px;
+            font-size: 7.5px;
             font-weight: 700;
             color: #484622;
             letter-spacing: 0.2px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             line-height: 1.2;
         }
         
         .contact-email {
-            font-size: 8px;
+            font-size: 6.5px;
             font-weight: 600;
             color: #484622;
             letter-spacing: 0.1px;
-            line-height: 1.4;
+            line-height: 1.3;
         }
         
         .pass-footer {
