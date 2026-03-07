@@ -344,7 +344,7 @@ function generatePassHTML(pass: any): string {
         <div class="contact-section">
             <div class="contact-label">Contact</div>
             <div class="contact-name">International Mess Committee</div>
-            <div class="contact-email">international.mc@srmap.edu.in</div>
+            <div class="contact-email">E-mail : international.mc@srmap.edu.in</div>
         </div>
         
         <!-- Footer -->
