@@ -907,12 +907,21 @@ export default function PassRequestsAdminPage() {
               <div className="p-8 space-y-6">
                 {/* Photo */}
                 <div className="flex justify-center">
-                  <div className="w-32 h-40 rounded-xl overflow-hidden border-4" style={{ borderColor: '#484622' }}>
-                    <img
-                      src={selectedRequest.photoUrl}
-                      alt={selectedRequest.fullName}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="relative">
+                    <div className="w-32 h-40 rounded-xl overflow-hidden border-4" style={{ borderColor: '#484622' }}>
+                      <img
+                        src={selectedRequest.photoUrl}
+                        alt={selectedRequest.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      onClick={() => handleDownloadPhoto(selectedRequest.photoUrl, `${selectedRequest.fullName.replace(/\s+/g, '_')}_photo.jpg`)}
+                      className="absolute bottom-0 right-0 bg-primary hover:bg-primary/90 text-white p-2 rounded-full shadow-lg transition transform hover:scale-110"
+                      title="Download Photo"
+                    >
+                      <Download size={16} />
+                    </button>
                   </div>
                 </div>
 
