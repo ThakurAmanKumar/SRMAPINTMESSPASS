@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Pass from '@/models/Pass';
 import connectDB from '@/lib/mongodb';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,9 +44,12 @@ export async function GET(
     const passHTML = generatePassHTML(pass);
 
     // Convert HTML to JPG using Puppeteer
+    // Use @sparticuz/chromium for serverless environments (Vercel)
     browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
     const page = await browser.newPage();
