@@ -213,7 +213,7 @@ function generatePassHTML(pass: any): string {
         }
         
         .authorization {
-            margin: 2px 12px 8px 12px;
+            margin: 2px 12px 12px 12px;
             padding: 14px 12px;
             border: 2px solid #484622;
             border-radius: 8px;
@@ -241,7 +241,7 @@ function generatePassHTML(pass: any): string {
         }
         
         .contact-section {
-            padding: 10px 16px;
+            padding: 12px 16px;
             background-color: #efeee3;
             text-align: center;
             border-top: 1px solid #484622;
@@ -249,11 +249,11 @@ function generatePassHTML(pass: any): string {
         }
         
         .contact-label {
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 700;
             color: #484622;
-            letter-spacing: 0.6px;
-            margin-bottom: 3px;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
         
@@ -262,7 +262,7 @@ function generatePassHTML(pass: any): string {
             font-weight: 700;
             color: #484622;
             letter-spacing: 0.2px;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
             line-height: 1.2;
         }
         
@@ -271,7 +271,7 @@ function generatePassHTML(pass: any): string {
             font-weight: 600;
             color: #484622;
             letter-spacing: 0.1px;
-            line-height: 1.3;
+            line-height: 1.4;
         }
         
         .pass-footer {
@@ -360,17 +360,17 @@ function generatePassHTML(pass: any): string {
             </div>
         </div>
         
-        <!-- Contact Section -->
-        <div class="contact-section">
-            <div class="contact-label">Contact</div>
-            <div class="contact-name">International Mess Committee</div>
-            <div class="contact-email">E-mail: <strong>international.mc@srmap.edu.in</strong></div>
-        </div>
-        
         <!-- Authorization Block -->
         <div class="authorization">
             <div class="auth-title">✦ Authorization ✦</div>
             <div class="auth-text">${pass.authorizationText}</div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-label">Contact</div>
+            <div class="contact-name">International Mess Committee</div>
+            <div class="contact-email">E-mail : international.mc@srmap.edu.in</div>
         </div>
         
         <!-- Footer -->
