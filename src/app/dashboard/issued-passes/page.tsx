@@ -13,6 +13,7 @@ interface Pass {
   regNumber: string;
   photoUrl: string;
   issuedDate: string;
+  authorizationText?: string;
 }
 
 export default function IssuedPassesPage() {
@@ -1013,6 +1014,7 @@ export default function IssuedPassesPage() {
                     regNumber={selectedPass.regNumber}
                     photoUrl={selectedPass.photoUrl}
                     issuedDate={selectedPass.issuedDate}
+                    authorizationText={selectedPass.authorizationText}
                   />
                 </div>
 

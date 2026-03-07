@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { fullName, regNumber, photoUrl } = await request.json();
+    const { fullName, regNumber, photoUrl, authorizationText } = await request.json();
 
     if (!fullName || !regNumber || !photoUrl) {
       return NextResponse.json(
@@ -22,6 +22,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+
 
     await connectDB();
 
@@ -55,10 +57,35 @@ export async function POST(request: NextRequest) {
       issuedDate: new Date(),
     });
 
+    // Explicitly set authorizationText
+    if (authorizationText && authorizationText.trim()) {
+      pass.authorizationText = authorizationText;
+    } else {
+      pass.authorizationText = 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.';
+    }
+    
     await pass.save();
 
+    // IMPORTANT: Re-fetch the document from the database to ensure all fields are included
+    const savedPassFromDB = await Pass.findById(pass._id);
+
+    // Create response object with ALL fields explicitly set
+    const passData = {
+      _id: String(savedPassFromDB?._id || pass._id),
+      issueId: savedPassFromDB?.issueId || pass.issueId,
+      fullName: savedPassFromDB?.fullName || pass.fullName,
+      regNumber: savedPassFromDB?.regNumber || pass.regNumber,
+      photoUrl: savedPassFromDB?.photoUrl || pass.photoUrl,
+      issuedDate: (savedPassFromDB?.issuedDate || pass.issuedDate)?.toISOString?.() || (savedPassFromDB?.issuedDate || pass.issuedDate),
+      authorizationText: String(savedPassFromDB?.authorizationText || 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.'),
+      createdAt: (savedPassFromDB?.createdAt || pass.createdAt)?.toISOString?.() || (savedPassFromDB?.createdAt || pass.createdAt),
+      updatedAt: (savedPassFromDB?.updatedAt || pass.updatedAt)?.toISOString?.() || (savedPassFromDB?.updatedAt || pass.updatedAt),
+    };
+    
+
+
     return NextResponse.json(
-      { pass },
+      { pass: passData },
       { status: 201 }
     );
   } catch (error) {
@@ -85,8 +112,21 @@ export async function GET(request: NextRequest) {
 
     const passes = await Pass.find().sort({ createdAt: -1 });
 
+    // Explicitly extract all fields from each pass document with proper authorizationText handling
+    const passesData = passes.map(pass => ({
+      _id: String(pass._id),
+      issueId: pass.issueId,
+      fullName: pass.fullName,
+      regNumber: pass.regNumber,
+      photoUrl: pass.photoUrl,
+      issuedDate: pass.issuedDate?.toISOString?.() || pass.issuedDate,
+      authorizationText: String(pass.authorizationText || 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.'),
+      createdAt: pass.createdAt?.toISOString?.() || pass.createdAt,
+      updatedAt: pass.updatedAt?.toISOString?.() || pass.updatedAt,
+    }));
+
     return NextResponse.json(
-      { passes },
+      { passes: passesData },
       { status: 200 }
     );
   } catch (error) {

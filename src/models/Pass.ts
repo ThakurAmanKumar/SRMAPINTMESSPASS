@@ -6,6 +6,7 @@ export interface IPass extends Document {
   regNumber: string;
   photoUrl: string;
   issuedDate: Date;
+  authorizationText?: string;
   createdAt: Date;
 }
 
@@ -32,6 +33,10 @@ const PassSchema = new Schema<IPass>(
     issuedDate: {
       type: Date,
       default: Date.now,
+    },
+    authorizationText: {
+      type: String,
+      default: 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.',
     },
   },
   {

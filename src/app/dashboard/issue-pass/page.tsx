@@ -13,6 +13,7 @@ interface IssuedPass {
   regNumber: string;
   photoUrl: string;
   issuedDate: string;
+  authorizationText?: string;
 }
 
 export default function IssuePassPage() {
@@ -46,6 +47,7 @@ export default function IssuePassPage() {
     fullName: 'Aman Kumar Thakur',
     regNumber: 'AP2311001168008',
     photo: null as File | null,
+    authorizationText: '',
   });
 
   const [photoPreview, setPhotoPreview] = useState('');
@@ -108,13 +110,17 @@ export default function IssuePassPage() {
 
       // Send pass data to API
       const token = localStorage.getItem('authToken');
+      
+      const requestPayload = {
+        fullName: formData.fullName,
+        regNumber: formData.regNumber,
+        photoUrl,
+        authorizationText: formData.authorizationText,
+      };
+      
       const response = await axios.post(
         '/api/passes',
-        {
-          fullName: formData.fullName,
-          regNumber: formData.regNumber,
-          photoUrl,
-        },
+        requestPayload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -129,6 +135,7 @@ export default function IssuePassPage() {
         fullName: '',
         regNumber: '',
         photo: null,
+        authorizationText: '',
       });
       setPhotoPreview('');
       if (fileInputRef.current) {
@@ -232,6 +239,24 @@ export default function IssuePassPage() {
               />
             </div>
 
+            {/* Authorization Text */}
+            <div>
+              <label htmlFor="authorizationText" className="block text-sm font-medium text-gray-700 mb-2">
+                Authorization Description
+              </label>
+              <textarea
+                id="authorizationText"
+                value={formData.authorizationText}
+                onChange={(e) => setFormData({ ...formData, authorizationText: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Leave empty for default: As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess."
+                rows={4}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Edit to customize, or leave blank to use default authorization text
+              </p>
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -264,6 +289,7 @@ export default function IssuePassPage() {
                     regNumber={issuedPass.regNumber}
                     photoUrl={issuedPass.photoUrl}
                     issuedDate={issuedPass.issuedDate}
+                    authorizationText={issuedPass.authorizationText}
                   />
                 </div>
               </div>

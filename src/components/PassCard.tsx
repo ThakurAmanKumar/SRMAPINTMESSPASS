@@ -6,10 +6,16 @@ interface PassCardProps {
   regNumber: string;
   photoUrl: string;
   issuedDate: string;
+  authorizationText?: string;
 }
 
 export const PassCard = React.forwardRef<HTMLDivElement, PassCardProps>(
-  ({ issueId, fullName, regNumber, photoUrl, issuedDate }, ref) => {
+  ({ issueId, fullName, regNumber, photoUrl, issuedDate, authorizationText }, ref) => {
+    const defaultAuthorizationText = 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.';
+    
+    // Display what we received
+    const textToDisplay = authorizationText && authorizationText.trim() ? authorizationText : defaultAuthorizationText;
+    
     const formattedDate = new Date(issuedDate).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'long',
@@ -226,7 +232,7 @@ export const PassCard = React.forwardRef<HTMLDivElement, PassCardProps>(
               letterSpacing: '0.1px',
             }}
           >
-            As per verification by the <span style={{ fontWeight: '700' }}>International Mess Committee, SRM University-AP</span>, the bearer of this pass is authorized to access and use the services of the International Mess.
+            {textToDisplay}
           </div>
         </div>
 

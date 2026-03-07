@@ -28,8 +28,21 @@ export async function GET(
       );
     }
 
+    // Explicitly extract all fields with proper authorizationText handling
+    const passObject = {
+      _id: String(pass._id),
+      issueId: pass.issueId,
+      fullName: pass.fullName,
+      regNumber: pass.regNumber,
+      photoUrl: pass.photoUrl,
+      issuedDate: pass.issuedDate?.toISOString?.() || pass.issuedDate,
+      authorizationText: String(pass.authorizationText || 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.'),
+      createdAt: pass.createdAt?.toISOString?.() || pass.createdAt,
+      updatedAt: pass.updatedAt?.toISOString?.() || pass.updatedAt,
+    };
+
     return NextResponse.json(
-      { pass },
+      { pass: passObject },
       { status: 200 }
     );
   } catch (error) {
