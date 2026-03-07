@@ -615,7 +615,7 @@ export default function MessPassRequestPage() {
                 <FileText size={28} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Required Documents</h3>
-              <p className="text-gray-600 text-sm">Valid ID proof and recent passport-size photograph are mandatory</p>
+              <p className="text-gray-600 text-sm">Recent passport-size photograph is mandatory for your pass</p>
             </div>
 
             <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
@@ -631,7 +631,7 @@ export default function MessPassRequestPage() {
                 <Mail size={28} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Email Notifications</h3>
-              <p className="text-gray-600 text-sm">Check your registered email for approval/rejection notifications</p>
+              <p className="text-gray-600 text-sm">Once approved, you will receive confirmation and pass details via email</p>
             </div>
 
             <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
