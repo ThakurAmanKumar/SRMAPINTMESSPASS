@@ -198,6 +198,10 @@ export default function MessPassRequestPage() {
               <Search size={20} />
               Check Status
             </a>
+            <a href="/VerifyPass" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 border border-white/30">
+              <Shield size={20} />
+              Verify Pass
+            </a>
           </div>
           
           {/* Decorative Line */}

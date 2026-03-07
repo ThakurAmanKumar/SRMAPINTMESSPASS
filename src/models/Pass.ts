@@ -7,6 +7,7 @@ export interface IPass extends Document {
   photoUrl: string;
   issuedDate: Date;
   authorizationText?: string;
+  status: 'approved' | 'revoked';
   createdAt: Date;
 }
 
@@ -37,6 +38,11 @@ const PassSchema = new Schema<IPass>(
     authorizationText: {
       type: String,
       default: 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.',
+    },
+    status: {
+      type: String,
+      enum: ['approved', 'revoked'],
+      default: 'approved',
     },
   },
   {
