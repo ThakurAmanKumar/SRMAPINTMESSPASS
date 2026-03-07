@@ -217,50 +217,13 @@ export default function DashboardPage() {
               
               {/* Quick Stats in Hero */}
               <div className="flex flex-wrap gap-3 md:gap-4 lg:gap-6 mt-4 md:mt-6 lg:mt-8 pt-3 md:pt-4 lg:pt-6 border-t border-white/20">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="bg-white/20 backdrop-blur-sm p-1.5 md:p-2 rounded-lg">
-                    <CheckCircle size={16} className="md:text-[20px] text-white" />
+                {/* Last Updated */}
+                {lastUpdated && (
+                  <div className="text-xs text-yellow-200/70">
+                    Last updated: {lastUpdated.toLocaleTimeString('en-IN')}
                   </div>
-                  <div>
-                    <p className="text-lg md:text-2xl font-bold">{stats?.totalPasses || 0}</p>
-                    <p className="text-yellow-200 text-xs md:text-sm">Total Passes</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="bg-white/20 backdrop-blur-sm p-1.5 md:p-2 rounded-lg">
-                    <BarChart3 size={16} className="md:text-[20px] text-white" />
-                  </div>
-                  <div>
-                    <p className="text-lg md:text-2xl font-bold">{stats?.todaysPasses || 0}</p>
-                    <p className="text-yellow-200 text-xs md:text-sm">Today</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="bg-white/20 backdrop-blur-sm p-1.5 md:p-2 rounded-lg">
-                    <Users size={16} className="md:text-[20px] text-white" />
-                  </div>
-                  <div>
-                    <p className="text-lg md:text-2xl font-bold">{stats?.totalStudents || 0}</p>
-                    <p className="text-yellow-200 text-xs md:text-sm">Students</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3">
-                  <div className="bg-white/20 backdrop-blur-sm p-1.5 md:p-2 rounded-lg">
-                    <Activity size={16} className="md:text-[20px] text-white" />
-                  </div>
-                  <div>
-                    <p className="text-lg md:text-2xl font-bold">{stats?.pendingCount || 0}</p>
-                    <p className="text-yellow-200 text-xs md:text-sm">Pending</p>
-                  </div>
-                </div>
+                )}
               </div>
-
-              {/* Last Updated */}
-              {lastUpdated && (
-                <div className="mt-4 text-xs text-yellow-200/70">
-                  Last updated: {lastUpdated.toLocaleTimeString('en-IN')}
-                </div>
-              )}
             </div>
           </div>
         </div>
