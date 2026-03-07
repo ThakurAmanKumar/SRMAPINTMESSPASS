@@ -62,8 +62,11 @@ export async function GET(
 
     await browser.close();
 
+    // Convert Buffer to Uint8Array for NextResponse
+    const uint8Array = new Uint8Array(jpgBuffer as any);
+    
     // Return as JPG file
-    return new NextResponse(jpgBuffer, {
+    return new NextResponse(uint8Array.buffer, {
       headers: {
         'Content-Type': 'image/jpeg',
         'Content-Disposition': `attachment; filename="Pass_${pass.issueId}.jpg"`,

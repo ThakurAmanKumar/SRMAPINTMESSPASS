@@ -32,6 +32,9 @@ export default function PassRequestsAdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [approvingRequest, setApprovingRequest] = useState<PassRequest | null>(null);
+  const [authorizationText, setAuthorizationText] = useState('As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.');
   const itemsPerPage = 10;
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
@@ -102,13 +105,21 @@ export default function PassRequestsAdminPage() {
     setCurrentPage(1);
   }, [searchQuery, requests, statusFilter]);
 
-  const handleApprove = async (request: PassRequest) => {
-    setProcessingId(request._id);
+  const handleApprove = (request: PassRequest) => {
+    setApprovingRequest(request);
+    setAuthorizationText('As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.');
+    setShowAuthModal(true);
+  };
+
+  const handleAuthorizationSubmit = async () => {
+    if (!approvingRequest) return;
+
+    setProcessingId(approvingRequest._id);
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.patch(
-        `/api/pass-requests/admin/${request.requestNumber}/approve`,
-        {},
+        `/api/pass-requests/admin/${approvingRequest.requestNumber}/approve`,
+        { authorizationText },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,9 +130,12 @@ export default function PassRequestsAdminPage() {
       // Update local state
       setRequests(
         requests.map((req) =>
-          req._id === request._id ? { ...req, status: 'approved' } : req
+          req._id === approvingRequest._id ? { ...req, status: 'approved' } : req
         )
       );
+
+      setShowAuthModal(false);
+      setApprovingRequest(null);
     } catch (err: any) {
       alert(err.response?.data?.error || 'Failed to approve request');
     } finally {
@@ -887,6 +901,54 @@ export default function PassRequestsAdminPage() {
                     style={{ backgroundColor: '#c62828' }}
                   >
                     Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Authorization Modal */}
+        {showAuthModal && approvingRequest && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-100">
+              <div className="bg-gradient-to-r from-[#484622] to-[#5a5830] border-b-4" style={{ borderColor: '#484622' }}>
+                <div className="px-8 py-6">
+                  <h2 className="text-2xl font-bold text-white">Authorization Description</h2>
+                  <p className="text-gray-200 text-sm mt-1">Edit or confirm the authorization text for this pass</p>
+                </div>
+              </div>
+
+              <div className="p-8 space-y-6">
+                <div>
+                  <label className="block font-bold mb-3 uppercase text-sm tracking-wide" style={{ color: '#484622' }}>Authorization Description</label>
+                  <textarea
+                    value={authorizationText}
+                    onChange={(e) => setAuthorizationText(e.target.value)}
+                    placeholder="Enter authorization description..."
+                    rows={5}
+                    className="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent resize-none transition"
+                    style={{ borderColor: '#484622', color: '#333' }}
+                    onFocus={(e) => { e.currentTarget.style.boxShadow = '0 0 0 3px #efeee3'; e.currentTarget.style.borderColor = '#484622'; }}
+                    onBlur={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => setShowAuthModal(false)}
+                    className="flex-1 text-gray-900 font-bold py-3 rounded-lg transition border-2"
+                    style={{ backgroundColor: '#efeee3', borderColor: '#484622', color: '#484622' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAuthorizationSubmit}
+                    disabled={processingId === approvingRequest._id}
+                    className="flex-1 hover:opacity-90 disabled:opacity-50 text-white font-bold py-3 rounded-lg transition transform hover:scale-105"
+                    style={{ backgroundColor: '#4CAF50' }}
+                  >
+                    Approve
                   </button>
                 </div>
               </div>

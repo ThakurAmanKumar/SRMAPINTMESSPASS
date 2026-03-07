@@ -36,12 +36,22 @@ export async function PATCH(
     await connectDB();
 
     const { action, requestNumber } = params;
-    let rejectionReason = ''
+    let rejectionReason = '';
+    let authorizationText = '';
     
-    // Only parse JSON body for reject action
-    if (action === 'reject') {
+    // Parse JSON body
+    try {
       const body = await req.json();
-      rejectionReason = body.rejectionReason || '';
+      if (action === 'reject') {
+        rejectionReason = body.rejectionReason || '';
+      } else if (action === 'approve') {
+        authorizationText = body.authorizationText || 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.';
+      }
+    } catch (e) {
+      // No body provided
+      if (action === 'approve') {
+        authorizationText = 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.';
+      }
     }
 
     const passRequest = await PassRequest.findOne({ requestNumber });
@@ -74,7 +84,7 @@ export async function PATCH(
         photoUrl: passRequest.photoUrl,
         issuedDate: new Date(),
         status: 'approved',
-        authorizationText: 'As per verification by the International Mess Committee, SRM University-AP, the bearer of this pass is authorized to access and use the services of the International Mess.',
+        authorizationText: authorizationText,
       });
 
       await newPass.save();
