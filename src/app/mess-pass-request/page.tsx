@@ -221,6 +221,65 @@ export default function MessPassRequestPage() {
           </p>
         </div>
 
+        {/* Important Information Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100 mb-16">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="bg-[#484622] text-white p-3 rounded-xl">
+              <Shield size={28} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-[#484622] font-poppins">
+                Important Information
+              </h2>
+              <p className="text-gray-500 text-sm">Please read before submitting your request</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
+              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
+                <FileText size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Required Documents</h3>
+              <p className="text-gray-600 text-sm">Recent passport-size photograph is mandatory for your pass</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
+              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
+                <Clock size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Processing Time</h3>
+              <p className="text-gray-600 text-sm">Your request will be processed within 24-48 business hours</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
+              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
+                <Mail size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Email Notifications</h3>
+              <p className="text-gray-600 text-sm">Once approved, you will receive confirmation and pass details via email</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
+              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
+                <Phone size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Query Support</h3>
+              <p className="text-gray-600 text-sm">Contact the International Mess Committee for additional queries or support</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Section Title */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#484622] font-poppins mb-4">
+            Submit Your Request
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Choose to submit a new request or check the status of your existing application
+          </p>
+        </div>
+
         {/* Forms Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
           {/* Submission Form */}
@@ -559,55 +618,6 @@ export default function MessPassRequestPage() {
                 )}
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Important Information Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="bg-[#484622] text-white p-3 rounded-xl">
-              <Shield size={28} />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-[#484622] font-poppins">
-                Important Information
-              </h2>
-              <p className="text-gray-500 text-sm">Please read before submitting your request</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
-                <FileText size={28} />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Required Documents</h3>
-              <p className="text-gray-600 text-sm">Recent passport-size photograph is mandatory for your pass</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
-                <Clock size={28} />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Processing Time</h3>
-              <p className="text-gray-600 text-sm">Your request will be processed within 24-48 business hours</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
-                <Mail size={28} />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Email Notifications</h3>
-              <p className="text-gray-600 text-sm">Once approved, you will receive confirmation and pass details via email</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-              <div className="bg-[#484622]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#484622] group-hover:text-white transition-colors">
-                <Phone size={28} />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Query Support</h3>
-              <p className="text-gray-600 text-sm">Contact the International Mess Committee for additional queries or support</p>
-            </div>
           </div>
         </div>
 
