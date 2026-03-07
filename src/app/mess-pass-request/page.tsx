@@ -620,52 +620,50 @@ export default function MessPassRequestPage() {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Contact & Footer Section */}
-        <div className="mt-16 bg-gradient-to-r from-[#484622] to-[#5d5a2f] rounded-2xl shadow-2xl p-8 md:p-12 text-white overflow-hidden relative">
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-          
-          <div className="relative z-10">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold font-poppins mb-3">Need Help?</h2>
-              <p className="text-white/80 max-w-2xl mx-auto">
-                If you have any questions or need assistance, please don&apos;t hesitate to reach out to us
-              </p>
+      {/* Full-Width Footer Section */}
+      <div className="bg-gradient-to-r from-[#484622] to-[#5d5a2f] text-white overflow-hidden relative w-full">
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-8">
+          <div className="text-center mb-6">
+            <h2 className="text-xl md:text-2xl font-bold font-poppins mb-1">Need Help?</h2>
+            <p className="text-white/80 max-w-2xl mx-auto text-xs">Contact us for any questions or assistance</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300">
+              <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Mail size={18} />
+              </div>
+              <h3 className="font-semibold mb-1 text-sm">Email</h3>
+              <p className="text-white/90 text-xs break-all">international.mc@srmap.edu.in</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="bg-white/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Mail size={24} />
-                </div>
-                <h3 className="font-semibold mb-2">Email</h3>
-                <p className="text-white/80 text-sm">international.mc@srmap.edu.in</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300">
+              <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Phone size={18} />
               </div>
-
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="bg-white/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone size={24} />
-                </div>
-                <h3 className="font-semibold mb-2">Phone</h3>
-                <p className="text-white/80 text-sm">+91-7042190865</p>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="bg-white/20 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MapPin size={24} />
-                </div>
-                <h3 className="font-semibold mb-2">Location</h3>
-                <p className="text-white/80 text-sm">SRM University AP, Amaravati</p>
-              </div>
+              <h3 className="font-semibold mb-1 text-sm">Phone</h3>
+              <p className="text-white/90 text-xs">+91-7042190865</p>
             </div>
 
-            <div className="mt-10 pt-8 border-t border-white/20 text-center">
-              <p className="text-white/60 text-sm">
-                © {new Date().getFullYear()} SRMAP International Mess Committee. All rights reserved.
-              </p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300">
+              <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <MapPin size={18} />
+              </div>
+              <h3 className="font-semibold mb-1 text-sm">Location</h3>
+              <p className="text-white/90 text-xs">SRM University AP, Amaravati</p>
             </div>
+          </div>
+
+          <div className="pt-4 border-t border-white/20 text-center">
+            <p className="text-white/60 text-xs">
+              © {new Date().getFullYear()} SRMAP International Mess Committee. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
