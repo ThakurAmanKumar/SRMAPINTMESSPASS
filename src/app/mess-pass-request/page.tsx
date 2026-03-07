@@ -597,7 +597,7 @@ export default function MessPassRequestPage() {
                         className="inline-flex items-center gap-2 w-full justify-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-base"
                       >
                         <FileText size={20} />
-                        Download Pass (JPG)
+                        Download Pass
                       </a>
                     ) : (
                       <button
