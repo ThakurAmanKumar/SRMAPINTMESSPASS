@@ -51,8 +51,8 @@ export async function GET(
     const page = await browser.newPage();
     await page.setContent(passHTML, { waitUntil: 'networkidle2' });
     
-    // Set viewport to HD dimensions for high quality
-    await page.setViewport({ width: 1080, height: 2400 });
+    // Set viewport to match pass card dimensions
+    await page.setViewport({ width: 360, height: 800 });
     
     const jpgBuffer = await page.screenshot({
       type: 'jpeg',
