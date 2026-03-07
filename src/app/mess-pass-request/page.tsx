@@ -581,9 +581,9 @@ export default function MessPassRequestPage() {
                           <CheckCircle size={20} />
                         </div>
                         <div>
-                          <p className="text-green-900 font-bold text-lg mb-2">Your Pass Request Approved!</p>
+                          <p className="text-green-900 font-bold text-lg mb-2">Your Pass Request has been Approved!</p>
                           <p className="text-green-800 text-sm">
-                            Your pass will be sent to <span className="font-bold">{statusData.email}</span> within 24 hours. Check your email for further instructions.
+                            Your pass is ready to download.
                           </p>
                         </div>
                       </div>
