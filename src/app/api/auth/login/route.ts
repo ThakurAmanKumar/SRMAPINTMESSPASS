@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     // If admin doesn't exist, return error
     if (!admin) {
       return NextResponse.json(
-        { error: 'Admin account not found' },
+        { error: 'This account is not verified or does not exist' },
         { status: 404 }
       );
     }

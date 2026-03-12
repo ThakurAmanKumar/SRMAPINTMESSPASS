@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const admin = await Admin.findOne({ email: email.toLowerCase() });
     if (!admin) {
       return NextResponse.json(
-        { error: 'Admin account not found' },
+        { error: 'This account is not verified or does not exist' },
         { status: 404 }
       );
     }
