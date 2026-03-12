@@ -245,7 +245,6 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 transition"
-                  style={{ focusRingColor: '#484622' }}
                   onFocus={(e) => e.target.style.borderColor = '#484622'}
                   onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                   required
