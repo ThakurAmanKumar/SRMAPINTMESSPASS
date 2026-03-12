@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 
@@ -82,6 +83,17 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#f5f5f5' }}>
       <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md border-t-4" style={{ borderColor: '#484622' }}>
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-white p-3 rounded-lg shadow-md border-2" style={{ borderColor: '#484622' }}>
+              <Image
+                src="/LOGO/dashboardsidebarlogo.png"
+                alt="SRMAP Logo"
+                width={80}
+                height={80}
+                className="rounded"
+              />
+            </div>
+          </div>
           <h1 className="text-3xl font-bold mb-2" style={{ color: '#484622' }}>Reset Password</h1>
           <p className="text-gray-600">SRMAP International Mess Pass Portal</p>
         </div>

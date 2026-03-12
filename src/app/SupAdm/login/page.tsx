@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import axios from 'axios';
 
 export default function SuperAdminLogin() {
@@ -76,6 +77,17 @@ export default function SuperAdminLogin() {
     <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#f5f5f5' }}>
       <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md border-t-4" style={{ borderColor: '#484622' }}>
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-6">
+            <div className="bg-white p-4 rounded-xl shadow-lg border-4" style={{ borderColor: '#484622' }}>
+              <Image
+                src="/LOGO/dashboardsidebarlogo.png"
+                alt="SRMAP Logo"
+                width={100}
+                height={100}
+                className="rounded-lg"
+              />
+            </div>
+          </div>
           <h1 className="text-3xl font-bold mb-2" style={{ color: '#484622' }}>Super Admin Panel</h1>
           <p className="text-gray-600">SRMAP International Mess Pass Portal</p>
         </div>
