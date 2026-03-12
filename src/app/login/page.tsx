@@ -176,8 +176,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #484622 0%, #5d5a2f 100%)' }}>
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center"
+      style={{ 
+        backgroundImage: 'url(/Adminlogin-pagebackground.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }} />
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md relative z-10">
         {/* Logo Section */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
