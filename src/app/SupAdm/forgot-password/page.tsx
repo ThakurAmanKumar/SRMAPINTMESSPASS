@@ -138,12 +138,12 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white py-2 rounded-lg font-semibold transition disabled:opacity-50"
+              className="w-full text-white py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#484622' }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#3a3419')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#484622')}
             >
-              {loading ? 'Sending OTP...' : 'Send OTP'}
+              {loading ? 'Sending... Please wait' : 'Send OTP'}
             </button>
 
             <Link
@@ -255,24 +255,24 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white py-2 rounded-lg font-semibold transition disabled:opacity-50"
+              className="w-full text-white py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#484622' }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#3a3419')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#484622')}
             >
-              {loading ? 'Resetting...' : 'Reset Password'}
+              {loading ? 'Resetting... Please wait' : 'Reset Password'}
             </button>
 
             <button
               type="button"
               onClick={handleResendOtp}
               disabled={loading}
-              className="w-full py-2 rounded-lg font-semibold transition disabled:opacity-50"
+              className="w-full py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#efeee3', color: '#484622' }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#ddd9cc')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#efeee3')}
             >
-              Resend OTP
+              {loading ? 'Sending... Please wait' : 'Resend OTP'}
             </button>
           </form>
         ) : (

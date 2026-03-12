@@ -273,9 +273,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Loading... Please wait' : 'Login'}
             </button>
 
             <div className="text-center">
@@ -324,9 +324,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Verifying...' : 'Verify OTP'}
+              {loading ? 'Verifying... Do not press again' : 'Verify OTP'}
             </button>
 
             <div className="flex gap-3">
@@ -382,9 +382,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Sending OTP...' : 'Send Reset Code'}
+              {loading ? 'Sending... Please wait' : 'Send Reset Code'}
             </button>
 
             <button
@@ -547,9 +547,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || newPassword.length < 6 || newPassword !== confirmPassword}
-              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+              className="w-full bg-primary hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Resetting...' : 'Reset Password'}
+              {loading ? 'Resetting... Please wait' : 'Reset Password'}
             </button>
 
             <button
