@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import SuperAdmin from '@/models/SuperAdmin';
-import Admin from '@/models/Admin';
 import OTP from '@/models/OTP';
 import { generateToken } from '@/lib/jwt';
 
@@ -33,18 +32,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify user exists - check both SuperAdmin and Admin
-    let user = await SuperAdmin.findOne({ email: email.toLowerCase() });
-    let userType = 'SuperAdmin';
-
-    if (!user) {
-      user = await Admin.findOne({ email: email.toLowerCase() });
-      userType = 'Admin';
-    }
-
-    if (!user) {
+    // Verify ONLY SuperAdmin exists (not Admin)
+    // This ensures only SuperAdmin accounts can access Super Admin panel
+    const superAdmin = await SuperAdmin.findOne({ email: email.toLowerCase() });
+    if (!superAdmin) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'This account is not verified or does not exist for Super Admin panel access' },
         { status: 404 }
       );
     }
@@ -55,9 +48,9 @@ export async function POST(request: NextRequest) {
     // Generate JWT token
     const token = generateToken(
       {
-        email: user.email,
-        id: user._id.toString(),
-        userType,
+        email: superAdmin.email,
+        id: superAdmin._id.toString(),
+        userType: 'SuperAdmin',
       },
       '24h'
     );
@@ -67,8 +60,8 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'OTP verified successfully',
         token,
-        email: user.email,
-        userType,
+        email: superAdmin.email,
+        userType: 'SuperAdmin',
       },
       { status: 200 }
     );
