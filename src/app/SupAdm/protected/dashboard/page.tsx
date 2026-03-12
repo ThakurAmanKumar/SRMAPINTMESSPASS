@@ -181,41 +181,41 @@ export default function SuperAdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <a
           href="/SupAdm/protected/admins"
-          className="text-white rounded-lg p-6 text-center transition transform hover:scale-105 shadow-md"
-          style={{ backgroundColor: '#484622' }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+          className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
+          style={{ backgroundColor: '#16a34a' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#15803d'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16a34a'}
         >
-          <Users size={32} className="mx-auto mb-2" />
-          <p className="font-semibold text-lg">Manage Admins</p>
-          <p className="text-sm mt-1 opacity-90">View, add, or remove administrators</p>
+          <Users size={24} className="mx-auto mb-1.5" />
+          <p className="font-semibold text-sm">Manage Admins</p>
+          <p className="text-xs mt-0.5 opacity-90">View, add, or remove administrators</p>
         </a>
 
         <a
           href="/SupAdm/protected/history"
-          className="text-white rounded-lg p-6 text-center transition transform hover:scale-105 shadow-md"
-          style={{ backgroundColor: '#a855f7' }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#9333ea'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#a855f7'}
+          className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
+          style={{ backgroundColor: '#484622' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
         >
-          <History size={32} className="mx-auto mb-2" />
-          <p className="font-semibold text-lg">Activity History</p>
-          <p className="text-sm mt-1 opacity-90">View all admin activities and actions</p>
+          <History size={24} className="mx-auto mb-1.5" />
+          <p className="font-semibold text-sm">Activity History</p>
+          <p className="text-xs mt-0.5 opacity-90">View all admin activities and actions</p>
         </a>
 
         <a
           href="/"
-          className="text-white rounded-lg p-6 text-center transition transform hover:scale-105 shadow-md"
-          style={{ backgroundColor: '#10b981' }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#059669'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
+          className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
+          style={{ backgroundColor: '#0284c7' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0369a1'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0284c7'}
         >
-          <FileText size={32} className="mx-auto mb-2" />
-          <p className="font-semibold text-lg">Main Portal</p>
-          <p className="text-sm mt-1 opacity-90">Return to main portal</p>
+          <FileText size={24} className="mx-auto mb-1.5" />
+          <p className="font-semibold text-sm">Main Portal</p>
+          <p className="text-xs mt-0.5 opacity-90">Return to main portal</p>
         </a>
       </div>
     </div>
