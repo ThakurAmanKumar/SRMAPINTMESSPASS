@@ -384,36 +384,10 @@ export default function AdminHistory() {
 
   return (
     <div className="p-8">
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8">
         <div>
           <h1 className="text-4xl font-bold mb-2" style={{ color: '#484622' }}>Admin Activity History</h1>
           <p className="text-gray-600 mt-1">Track all administrative actions performed in the system</p>
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={generatePrintReport}
-            disabled={history.length === 0}
-            className="flex items-center gap-2 px-6 py-3 text-white rounded-lg font-semibold transition disabled:opacity-50"
-            style={{ backgroundColor: '#484622' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
-            title="Print Report"
-          >
-            <Printer size={18} />
-            Print Report
-          </button>
-          <button
-            onClick={generateExcelReport}
-            disabled={history.length === 0}
-            className="flex items-center gap-2 px-6 py-3 text-white rounded-lg font-semibold transition disabled:opacity-50"
-            style={{ backgroundColor: '#16a34a' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#15803d'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16a34a'}
-            title="Download as Excel"
-          >
-            <Download size={18} />
-            Export (Excel)
-          </button>
         </div>
       </div>
 
@@ -488,6 +462,34 @@ export default function AdminHistory() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Export Buttons */}
+      <div className="mb-6 flex gap-2">
+        <button
+          onClick={generatePrintReport}
+          disabled={history.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-md font-medium transition disabled:opacity-50 text-sm"
+          style={{ backgroundColor: '#484622' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+          title="Print Report"
+        >
+          <Printer size={14} />
+          Print
+        </button>
+        <button
+          onClick={generateExcelReport}
+          disabled={history.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-md font-medium transition disabled:opacity-50 text-sm"
+          style={{ backgroundColor: '#16a34a' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#15803d'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16a34a'}
+          title="Download as Excel"
+        >
+          <Download size={14} />
+          Excel
+        </button>
       </div>
 
       {/* History Table */}
