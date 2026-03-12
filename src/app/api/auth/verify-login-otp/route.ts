@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Admin from '@/models/Admin';
+import SuperAdmin from '@/models/SuperAdmin';
 import OTP from '@/models/OTP';
 import { generateToken } from '@/lib/jwt';
 
@@ -32,11 +33,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify admin exists
+    // Check if this is a SuperAdmin account (they cannot login via admin panel)
+    const superAdmin = await SuperAdmin.findOne({ email: email.toLowerCase() });
+    if (superAdmin) {
+      return NextResponse.json(
+        { error: 'This account is not authorized for admin panel access' },
+        { status: 403 }
+      );
+    }
+
+    // Verify admin exists in Admin collection only
     const admin = await Admin.findOne({ email: email.toLowerCase() });
     if (!admin) {
       return NextResponse.json(
-        { error: 'Admin not found' },
+        { error: 'Admin account not found' },
         { status: 404 }
       );
     }
