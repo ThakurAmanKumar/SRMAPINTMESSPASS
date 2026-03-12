@@ -31,6 +31,18 @@ export async function verifySuperAdminAuth(request: NextRequest) {
     };
   }
 
+  // Check if user is SuperAdmin (not Admin)
+  if (payload.userType === 'Admin') {
+    return {
+      valid: false,
+      error: NextResponse.json(
+        { error: 'Unauthorized: Only Super Admins can access this resource' },
+        { status: 403 }
+      ),
+      payload: null,
+    };
+  }
+
   return {
     valid: true,
     error: null,

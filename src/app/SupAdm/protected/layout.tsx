@@ -14,6 +14,7 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
   const [isMobile, setIsMobile] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('superadmin-token');
@@ -22,10 +23,18 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
       return;
     }
 
-    // Decode JWT to get email
+    // Decode JWT to get email and userType
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       setUserEmail(payload.email);
+      setUserType(payload.userType || 'SuperAdmin');
+      
+      // If user is Admin, redirect to admin dashboard
+      if (payload.userType === 'Admin') {
+        router.push('/dashboard');
+        return;
+      }
+      
       setIsLoggedIn(true);
     } catch (error) {
       localStorage.removeItem('superadmin-token');
