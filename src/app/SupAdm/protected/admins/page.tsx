@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Trash2, Plus, AlertCircle, Check } from 'lucide-react';
+import { Trash2, Plus, AlertCircle, Check, Download, Printer } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface Admin {
   _id: string;
@@ -18,6 +19,7 @@ export default function AdminsManager() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState('');
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchAdmins();
@@ -75,6 +77,220 @@ export default function AdminsManager() {
       await fetchAdmins();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to delete admin');
+    }
+  };
+
+  const generatePrintReport = () => {
+    const reportDate = new Date().toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow pop-ups for printing');
+      return;
+    }
+
+    const tableHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin List Report</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #484622;
+            padding-bottom: 15px;
+          }
+          .logo-text {
+            color: #484622;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .portal-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          .metadata {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #555;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+          }
+          thead {
+            background-color: #efeee3;
+            border-bottom: 2px solid #484622;
+          }
+          th {
+            color: #484622;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+            border-right: 1px solid #ccc;
+            font-size: 12px;
+          }
+          td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 11px;
+            border-right: 1px solid #eee;
+          }
+          tr:nth-child(even) {
+            background-color: #f9f9f9;
+          }
+          tr:hover {
+            background-color: #f0f0f0;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 10px;
+            color: #999;
+          }
+          @media print {
+            body { margin: 0; padding: 10mm; }
+            .header { page-break-after: avoid; }
+            table { page-break-inside: avoid; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo-text">SRMAP - Admin List Report</div>
+          <div class="portal-text">International Mess Pass Portal</div>
+        </div>
+        
+        <div class="metadata">
+          <span>Report Generated: ${reportDate}</span>
+          <span>Total Admins: ${admins.length}</span>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Email</th>
+              <th>Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              admins.map((admin, index) => {
+                const dateStr = new Date(admin.createdAt).toLocaleString('en-IN');
+                return `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${admin.email}</td>
+                    <td>${dateStr}</td>
+                  </tr>
+                `;
+              }).join('')
+            }
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <p>This is an official report from SRMAP Mess Pass Portal Management System</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(tableHTML);
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
+  };
+
+  const generateExcelReport = async () => {
+    try {
+      const workbook = XLSX.utils.book_new();
+      
+      // Prepare data for Excel with specific columns
+      const excelData = admins.map((admin, index) => ({
+        'S.No': index + 1,
+        'Email': admin.email,
+        'Created Date': new Date(admin.createdAt).toLocaleString('en-IN'),
+        'Status': 'Active',
+      }));
+
+      // Add data sheet
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      
+      // Set column widths for better visibility
+      const colWidths = [
+        { wch: 8 },   // S.No
+        { wch: 30 },  // Email
+        { wch: 25 },  // Created Date
+        { wch: 12 },  // Status
+      ];
+      worksheet['!cols'] = colWidths;
+
+      // Style header row like history page
+      const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const address = XLSX.utils.encode_col(C) + '1';
+        if (!worksheet[address]) continue;
+        worksheet[address].s = {
+          font: { bold: true, color: { rgb: 'FFFFFF' } },
+          fill: { fgColor: { rgb: '484622' } },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: { bottom: { style: 'thin' } },
+        };
+      }
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Admin List');
+
+      // Add summary sheet
+      const summaryData = [
+        ['SRMAP Admin List Report', '', ''],
+        ['', '', ''],
+        ['Report Details', '', ''],
+        ['Generated Date', new Date().toLocaleString('en-IN'), ''],
+        ['Total Admins', admins.length, ''],
+        ['Portal', 'SRMAP - International Mess Pass Portal', ''],
+        ['', '', ''],
+        ['Admin Status Summary', 'Count', ''],
+        ['Active', admins.length, ''],
+      ];
+
+      const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+      summarySheet['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 20 }];
+
+      // Create workbook with multiple sheets
+      XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+
+      // Save file
+      XLSX.writeFile(workbook, `admin-list-${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+      alert('Failed to generate Excel report');
     }
   };
 
@@ -182,6 +398,34 @@ export default function AdminsManager() {
           </form>
         </div>
       )}
+
+      {/* Export Buttons */}
+      <div className="mb-6 flex gap-2">
+        <button
+          onClick={generatePrintReport}
+          disabled={admins.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-md font-medium transition disabled:opacity-50 text-sm"
+          style={{ backgroundColor: '#484622' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+          title="Print Report"
+        >
+          <Printer size={14} />
+          Print
+        </button>
+        <button
+          onClick={generateExcelReport}
+          disabled={admins.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-md font-medium transition disabled:opacity-50 text-sm"
+          style={{ backgroundColor: '#16a34a' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#15803d'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16a34a'}
+          title="Download as Excel"
+        >
+          <Download size={14} />
+          Excel
+        </button>
+      </div>
 
       {/* Admins Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4" style={{ borderColor: '#484622' }}>
