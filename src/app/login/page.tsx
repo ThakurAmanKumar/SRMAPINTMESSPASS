@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import axios from 'axios';
 
 type LoginStep = 'credentials' | 'otp' | 'forgot-password' | 'forgot-password-otp' | 'reset-password';
@@ -177,7 +178,17 @@ export default function LoginPage() {
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="text-4xl font-bold text-primary mb-2">SRMAP</div>
+          <div className="flex justify-center mb-4">
+            <div className="bg-white p-3 rounded-lg shadow-md border-2" style={{ borderColor: '#484622' }}>
+              <Image
+                src="/LOGO/dashboardsidebarlogo.png"
+                alt="SRMAP Logo"
+                width={100}
+                height={100}
+                className="rounded"
+              />
+            </div>
+          </div>
           <h1 className="text-2xl font-bold text-gray-800">Mess Pass Portal</h1>
           <p className="text-gray-600 text-sm mt-2">International Mess Committee</p>
         </div>
