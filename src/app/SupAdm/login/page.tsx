@@ -76,8 +76,17 @@ export default function SuperAdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#f5f5f5' }}>
-      <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md border-t-4" style={{ borderColor: '#484622' }}>
+    <div 
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ 
+        backgroundImage: 'url(/SuperAdminlogin-backgroundimg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }} />
+      <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md border-t-4 relative z-10" style={{ borderColor: '#484622' }}>
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <div className="bg-white p-4 rounded-xl shadow-lg border-4" style={{ borderColor: '#484622' }}>
