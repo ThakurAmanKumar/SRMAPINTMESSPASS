@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 
 export default function SuperAdminLogin() {
@@ -12,6 +13,7 @@ export default function SuperAdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -116,16 +118,35 @@ export default function SuperAdminLogin() {
 
             <div>
               <label className="block font-semibold mb-2" style={{ color: '#484622' }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none transition"
-                onFocus={(e) => e.target.style.borderColor = '#484622'}
-                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                placeholder="••••••••"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none transition pr-10"
+                  onFocus={(e) => e.target.style.borderColor = '#484622'}
+                  onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded transition"
+                  style={{ color: '#484622' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#efeee3';
+                    e.currentTarget.style.color = '#3a3419';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#484622';
+                  }}
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
               <div className="mt-2 text-right">
                 <Link href="/SupAdm/forgot-password" className="text-sm hover:underline" style={{ color: '#484622' }}>
                   Forgot Password?
