@@ -21,10 +21,10 @@ export async function logAdminAction({
   adminEmail,
   actionType,
   actionDetails,
-  targetId = null,
+  targetId,
   targetType = 'OTHER',
   status = 'SUCCESS',
-  ipAddress = null,
+  ipAddress,
 }: LogActionParams): Promise<IAdminHistory | null> {
   try {
     await connectDB();
@@ -58,11 +58,11 @@ export async function getAdminActionHistory(
   try {
     await connectDB();
 
-    const history = await AdminHistory.find({ adminEmail: adminEmail.toLowerCase() })
+    const history = (await AdminHistory.find({ adminEmail: adminEmail.toLowerCase() })
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip)
-      .lean();
+      .lean()) as unknown as IAdminHistory[];
 
     return history;
   } catch (error) {
@@ -92,11 +92,11 @@ export async function getAllActionHistory(
       query.actionType = filters.actionType;
     }
 
-    const history = await AdminHistory.find(query)
+    const history = (await AdminHistory.find(query)
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip)
-      .lean();
+      .lean()) as unknown as IAdminHistory[];
 
     return history;
   } catch (error) {

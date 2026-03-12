@@ -37,7 +37,7 @@ export async function DELETE(
     }
 
     // Prevent deleting the current super admin (optional security measure)
-    if (superAdmin.email === auth.email) {
+    if (superAdmin.email === auth.payload!.email) {
       return NextResponse.json(
         { error: 'Cannot delete your own super admin account' },
         { status: 403 }
@@ -49,12 +49,12 @@ export async function DELETE(
 
     // Log action
     await logAdminAction({
-      adminEmail: auth.email,
-      actionType: 'DELETE_SUPER_ADMIN',
+      adminEmail: auth.payload!.email,
+      actionType: 'DELETE_ADMIN',
       actionDetails: `Deleted super admin: ${superAdmin.email}`,
       targetId: id,
-      targetType: 'SuperAdmin',
-      status: 'success',
+      targetType: 'ADMIN',
+      status: 'SUCCESS',
       ipAddress: getClientIP(request),
     });
 
@@ -67,15 +67,15 @@ export async function DELETE(
 
     // Log failed action
     try {
-      const auth = await verifySuperAdminAuth(request);
-      if (auth) {
+      const authRetry = await verifySuperAdminAuth(request);
+      if (authRetry.valid && authRetry.payload) {
         await logAdminAction({
-          adminEmail: auth.email,
-          actionType: 'DELETE_SUPER_ADMIN',
+          adminEmail: authRetry.payload.email,
+          actionType: 'DELETE_ADMIN',
           actionDetails: `Failed to delete super admin`,
           targetId: params.id,
-          targetType: 'SuperAdmin',
-          status: 'failed',
+          targetType: 'ADMIN',
+          status: 'FAILED',
           ipAddress: getClientIP(request),
         });
       }

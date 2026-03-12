@@ -83,12 +83,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Log action
     await logAdminAction({
-      adminEmail: auth.email,
-      actionType: 'CREATE_SUPER_ADMIN',
+      adminEmail: auth.payload!.email,
+      actionType: 'CREATE_ADMIN',
       actionDetails: `Created new super admin: ${email}`,
       targetId: newSuperAdmin._id.toString(),
-      targetType: 'SuperAdmin',
-      status: 'success',
+      targetType: 'ADMIN',
+      status: 'SUCCESS',
       ipAddress: getClientIP(request),
     });
 
@@ -108,15 +108,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     
     // Log failed action
     try {
-      const auth = await verifySuperAdminAuth(request);
-      if (auth) {
+      const authRetry = await verifySuperAdminAuth(request);
+      if (authRetry.valid && authRetry.payload) {
         await logAdminAction({
-          adminEmail: auth.email,
-          actionType: 'CREATE_SUPER_ADMIN',
+          adminEmail: authRetry.payload.email,
+          actionType: 'CREATE_ADMIN',
           actionDetails: `Failed to create super admin`,
           targetId: '',
-          targetType: 'SuperAdmin',
-          status: 'failed',
+          targetType: 'ADMIN',
+          status: 'FAILED',
           ipAddress: getClientIP(request),
         });
       }

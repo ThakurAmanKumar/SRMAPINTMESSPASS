@@ -95,7 +95,6 @@ export default function SuperAdminLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none transition"
-                style={{ focusBorderColor: '#484622' }}
                 onFocus={(e) => e.target.style.borderColor = '#484622'}
                 onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                 placeholder="super.admin@srmap.edu.in"

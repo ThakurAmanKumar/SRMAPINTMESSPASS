@@ -153,7 +153,6 @@ export default function SuperAdminsPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none transition"
-              style={{ focusColor: '#484622' }}
               placeholder="superadmin@example.com"
             />
           </div>
@@ -166,7 +165,6 @@ export default function SuperAdminsPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none transition"
-                style={{ focusColor: '#484622' }}
                 placeholder="••••••••"
               />
               <button

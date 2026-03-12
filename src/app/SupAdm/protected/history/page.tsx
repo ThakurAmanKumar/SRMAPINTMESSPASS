@@ -38,11 +38,6 @@ export default function AdminHistory() {
   const [modalLoading, setModalLoading] = useState(false);
   const limit = 20;
 
-  useEffect(() => {
-    fetchHistory();
-    fetchAdmins();
-  }, [fetchHistory]);
-
   const fetchAdmins = async () => {
     try {
       const token = localStorage.getItem('superadmin-token');
@@ -79,6 +74,11 @@ export default function AdminHistory() {
       setLoading(false);
     }
   }, [page, adminFilter, actionTypeFilter, limit]);
+
+  useEffect(() => {
+    fetchHistory();
+    fetchAdmins();
+  }, [fetchHistory]);
 
   const handleDeletedDocumentClick = async (record: HistoryRecord) => {
     if (record.actionType !== 'DELETE_PASS' && record.actionType !== 'DELETE_REQUEST') {

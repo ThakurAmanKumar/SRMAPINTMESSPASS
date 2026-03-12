@@ -45,26 +45,26 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           used: {
             bytes: usedSize,
             mb: Math.round(usedMB * 100) / 100,
-            gb: parseFloat(usedGB.toFixed(2)),
+            gb: Math.round(usedGB * 100) / 100,
           },
           available: {
             bytes: availableSize,
             mb: Math.round(availableMB * 100) / 100,
-            gb: parseFloat(availableGB.toFixed(2)),
+            gb: Math.round(availableGB * 100) / 100,
           },
           total: {
             bytes: totalAllocated,
             mb: Math.round(totalMB * 100) / 100,
-            gb: parseFloat(totalGB.toFixed(2)),
+            gb: Math.round(totalGB * 100) / 100,
           },
-          percentageUsed: parseFloat(Math.round(percentageUsed * 100) / 100),
-          percentageAvailable: parseFloat(Math.round((100 - percentageUsed) * 100) / 100),
+          percentageUsed: Math.round(percentageUsed * 100) / 100,
+          percentageAvailable: Math.round((100 - percentageUsed) * 100) / 100,
         },
         database: {
           dataSize: {
             bytes: dataSize,
             mb: Math.round((dataSize / (1024 * 1024)) * 100) / 100,
-            gb: parseFloat((dataSize / (1024 * 1024 * 1024)).toFixed(2)),
+            gb: Math.round((dataSize / (1024 * 1024 * 1024)) * 100) / 100,
           },
           collections: dbStats.collections || 0,
           indexes: dbStats.indexes || 0,
