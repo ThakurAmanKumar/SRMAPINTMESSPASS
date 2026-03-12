@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const superAdmin = await SuperAdmin.findOne({ email: email.toLowerCase() });
     if (!superAdmin) {
       return NextResponse.json(
-        { error: 'Super admin not found' },
+        { error: 'This account is not verified or does not exist' },
         { status: 404 }
       );
     }

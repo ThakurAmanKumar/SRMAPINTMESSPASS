@@ -25,13 +25,9 @@ export async function POST(request: NextRequest) {
     // Verify admin exists
     const admin = await Admin.findOne({ email: email.toLowerCase() });
     if (!admin) {
-      // For security, don't reveal if email exists or not
       return NextResponse.json(
-        { 
-          message: 'If this email exists, a password reset OTP has been sent',
-          email: email.toLowerCase(),
-        },
-        { status: 200 }
+        { error: 'This account does not exist' },
+        { status: 404 }
       );
     }
 

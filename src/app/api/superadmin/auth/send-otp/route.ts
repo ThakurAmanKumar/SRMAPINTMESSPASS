@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!superAdmin) {
       return NextResponse.json(
-        { error: 'Super Admin not found' },
+        { error: 'This account is not verified or does not exist' },
         { status: 404 }
       );
     }

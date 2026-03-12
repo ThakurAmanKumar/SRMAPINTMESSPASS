@@ -22,10 +22,9 @@ export async function POST(request: NextRequest) {
     // Find super admin
     const superAdmin = await SuperAdmin.findOne({ email: email.toLowerCase() });
     if (!superAdmin) {
-      // Don't reveal if email exists (security best practice)
       return NextResponse.json(
-        { message: 'If the email exists, an OTP has been sent' },
-        { status: 200 }
+        { error: 'This account is not verified or does not exist' },
+        { status: 404 }
       );
     }
 
