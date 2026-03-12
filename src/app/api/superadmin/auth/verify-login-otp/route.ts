@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import SuperAdmin from '@/models/SuperAdmin';
+import Admin from '@/models/Admin';
 import OTP from '@/models/OTP';
 import { generateToken } from '@/lib/jwt';
 
@@ -32,11 +33,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify super admin exists
-    const superAdmin = await SuperAdmin.findOne({ email: email.toLowerCase() });
-    if (!superAdmin) {
+    // Verify user exists - check both SuperAdmin and Admin
+    let user = await SuperAdmin.findOne({ email: email.toLowerCase() });
+    let userType = 'SuperAdmin';
+
+    if (!user) {
+      user = await Admin.findOne({ email: email.toLowerCase() });
+      userType = 'Admin';
+    }
+
+    if (!user) {
       return NextResponse.json(
-        { error: 'Super Admin not found' },
+        { error: 'User not found' },
         { status: 404 }
       );
     }
@@ -47,8 +55,9 @@ export async function POST(request: NextRequest) {
     // Generate JWT token
     const token = generateToken(
       {
-        email: superAdmin.email,
-        id: superAdmin._id.toString(),
+        email: user.email,
+        id: user._id.toString(),
+        userType,
       },
       '24h'
     );
@@ -58,7 +67,8 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'OTP verified successfully',
         token,
-        email: superAdmin.email,
+        email: user.email,
+        userType,
       },
       { status: 200 }
     );

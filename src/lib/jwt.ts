@@ -11,6 +11,7 @@ const JWT_SECRET: string = (() => {
 interface JWTPayload {
   email: string;
   id: string;
+  userType?: string;
 }
 
 export function generateToken(payload: JWTPayload, expiresIn: string | number = '24h'): string {
