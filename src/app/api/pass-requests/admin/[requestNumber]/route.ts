@@ -3,6 +3,8 @@ import PassRequest from '@/models/PassRequest';
 import connectDB from '@/lib/mongodb';
 import { verifyAuth } from '@/lib/auth-middleware';
 import Admin from '@/models/Admin';
+import { logAdminAction } from '@/lib/admin-action-logger';
+import { getClientIP } from '@/lib/superadmin-middleware';
 
 export async function DELETE(
   req: NextRequest,
@@ -39,6 +41,17 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Log the action
+    await logAdminAction({
+      adminEmail: authResult.payload.email,
+      actionType: 'DELETE_REQUEST',
+      actionDetails: `Deleted pass request: ${requestNumber} (Student: ${passRequest.fullName})`,
+      targetId: passRequest._id.toString(),
+      targetType: 'REQUEST',
+      status: 'SUCCESS',
+      ipAddress: getClientIP(req),
+    });
 
     return NextResponse.json(
       {

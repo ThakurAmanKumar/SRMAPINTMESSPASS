@@ -6,6 +6,8 @@ import { verifyAuth } from '@/lib/auth-middleware';
 import Admin from '@/models/Admin';
 import { sendEmail } from '@/lib/mailer';
 import { getPassApprovedEmailHTML, getPassApprovedEmailText, getPassRejectedEmailHTML, getPassRejectedEmailText } from '@/lib/email-templates';
+import { logAdminAction } from '@/lib/admin-action-logger';
+import { getClientIP } from '@/lib/superadmin-middleware';
 
 export const dynamic = 'force-dynamic';
 
@@ -124,6 +126,17 @@ export async function PATCH(
         // Don't fail the request if email fails
       }
 
+      // Log the action
+      await logAdminAction({
+        adminEmail: authResult.payload.email,
+        actionType: 'APPROVE_REQUEST',
+        actionDetails: `Approved pass request: ${requestNumber}. Generated pass issue ID: ${issueId}`,
+        targetId: passRequest._id.toString(),
+        targetType: 'REQUEST',
+        status: 'SUCCESS',
+        ipAddress: getClientIP(req),
+      });
+
       return NextResponse.json({
         success: true,
         message: 'Request approved and pass generated successfully',
@@ -168,6 +181,17 @@ export async function PATCH(
         console.error('Error sending rejection email:', emailError);
         // Don't fail the request if email fails
       }
+
+      // Log the action
+      await logAdminAction({
+        adminEmail: authResult.payload.email,
+        actionType: 'REJECT_REQUEST',
+        actionDetails: `Rejected pass request: ${requestNumber}. Reason: ${rejectionReason}`,
+        targetId: passRequest._id.toString(),
+        targetType: 'REQUEST',
+        status: 'SUCCESS',
+        ipAddress: getClientIP(req),
+      });
 
       return NextResponse.json({
         success: true,

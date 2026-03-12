@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Pass from '@/models/Pass';
+import Admin from '@/models/Admin';
 import { verifyToken, getTokenFromRequest } from '@/lib/jwt';
 import { Types } from 'mongoose';
+import { logAdminAction } from '@/lib/admin-action-logger';
+import { getClientIP } from '@/lib/superadmin-middleware';
 
 export async function GET(
   request: NextRequest,
@@ -68,7 +71,18 @@ export async function DELETE(
       );
     }
 
+    const payload = verifyToken(token);
+
     await connectDB();
+
+    // If deleting a pass, verify the user is an admin
+    const admin = await Admin.findOne({ email: payload?.email });
+    if (!admin) {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
 
     const pass = await Pass.findByIdAndDelete(params.id);
     if (!pass) {
@@ -77,6 +91,17 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Log the action
+    await logAdminAction({
+      adminEmail: payload?.email || 'unknown',
+      actionType: 'DELETE_PASS',
+      actionDetails: `Deleted pass: ${pass.issueId} (Student: ${pass.fullName}, RegNo: ${pass.regNumber})`,
+      targetId: pass._id.toString(),
+      targetType: 'PASS',
+      status: 'SUCCESS',
+      ipAddress: getClientIP(request),
+    });
 
     return NextResponse.json(
       { message: 'Pass deleted successfully' },
