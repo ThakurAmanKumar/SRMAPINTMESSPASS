@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
-import { AlertCircle, X } from 'lucide-react';
+import { AlertCircle, X, Download, Printer } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface HistoryRecord {
   _id: string;
@@ -36,6 +37,7 @@ export default function AdminHistory() {
   const [showModal, setShowModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<DeletedDocument | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
   const limit = 20;
 
   const fetchAdmins = async () => {
@@ -102,6 +104,261 @@ export default function AdminHistory() {
     }
   };
 
+  const generatePrintReport = () => {
+    const reportDate = new Date().toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow pop-ups for printing');
+      return;
+    }
+
+    const tableHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Activity History Report</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #484622;
+            padding-bottom: 15px;
+          }
+          .logo-text {
+            color: #484622;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .portal-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          .metadata {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #555;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+          }
+          thead {
+            background-color: #efeee3;
+            border-bottom: 2px solid #484622;
+          }
+          th {
+            color: #484622;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+            border-right: 1px solid #ccc;
+            font-size: 12px;
+          }
+          td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 11px;
+            border-right: 1px solid #eee;
+          }
+          tr:nth-child(even) {
+            background-color: #f9f9f9;
+          }
+          tr:hover {
+            background-color: #f0f0f0;
+          }
+          .action-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 10px;
+          }
+          .delete { background-color: #fee2e2; color: #dc2626; }
+          .revoke { background-color: #fed7aa; color: #ea580c; }
+          .approve { background-color: #dcfce7; color: #16a34a; }
+          .reject { background-color: #fef3c7; color: #ca8a04; }
+          .create { background-color: #dbeafe; color: #0284c7; }
+          .update { background-color: #e9d5ff; color: #7c3aed; }
+          .other { background-color: #f3f4f6; color: #374151; }
+          .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 10px;
+            color: #999;
+          }
+          @media print {
+            body { margin: 0; padding: 10mm; }
+            .header { page-break-after: avoid; }
+            table { page-break-inside: avoid; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo-text">SRMAP - Admin Activity History</div>
+          <div class="portal-text">International Mess Pass Portal</div>
+        </div>
+        
+        <div class="metadata">
+          <span>Report Generated: ${reportDate}</span>
+          <span>Total Records: ${history.length}</span>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Admin Email</th>
+              <th>Action Type</th>
+              <th>Details</th>
+              <th>Date & Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              history.map((record, index) => {
+                const sNo = ((page - 1) * limit) + index + 1;
+                const dateStr = new Date(record.createdAt).toLocaleString('en-IN');
+                const actionClass = record.actionType.includes('DELETE')
+                  ? 'delete'
+                  : record.actionType.includes('REVOKE')
+                  ? 'revoke'
+                  : record.actionType.includes('APPROVE')
+                  ? 'approve'
+                  : record.actionType.includes('REJECT')
+                  ? 'reject'
+                  : record.actionType.includes('CREATE')
+                  ? 'create'
+                  : record.actionType.includes('UPDATE')
+                  ? 'update'
+                  : 'other';
+
+                return `
+                  <tr>
+                    <td>${sNo}</td>
+                    <td>${record.adminEmail}</td>
+                    <td><span class="action-badge ${actionClass}">${record.actionType}</span></td>
+                    <td>${record.actionDetails}</td>
+                    <td>${dateStr}</td>
+                  </tr>
+                `;
+              }).join('')
+            }
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <p>This is an official report from SRMAP Mess Pass Portal Management System</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(tableHTML);
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
+  };
+
+  const generateExcelReport = async () => {
+    try {
+      const workbook = XLSX.utils.book_new();
+      
+      // Prepare data for Excel with specific columns only
+      const excelData = history.map((record, index) => ({
+        'S.No': ((page - 1) * limit) + index + 1,
+        'Admin Email': record.adminEmail,
+        'Action Type': record.actionType,
+        'Details': record.actionDetails,
+        'Date & Time': new Date(record.createdAt).toLocaleString('en-IN'),
+      }));
+
+      // Add data sheet
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      
+      // Set column widths for better visibility
+      const colWidths = [
+        { wch: 8 },   // S.No
+        { wch: 30 },  // Admin Email
+        { wch: 20 },  // Action Type
+        { wch: 40 },  // Details
+        { wch: 25 },  // Date & Time
+      ];
+      worksheet['!cols'] = colWidths;
+
+      // Style header row
+      const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const address = XLSX.utils.encode_col(C) + '1';
+        if (!worksheet[address]) continue;
+        worksheet[address].s = {
+          font: { bold: true, color: { rgb: 'FFFFFF' } },
+          fill: { fgColor: { rgb: '484622' } },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: { bottom: { style: 'thin' } },
+        };
+      }
+
+      // Add history sheet with formatted data
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'History');
+
+      // Add summary sheet
+      const summaryData = [
+        ['SRMAP Admin Activity History Report', '', ''],
+        ['', '', ''],
+        ['Report Details', '', ''],
+        ['Generated Date', new Date().toLocaleString('en-IN'), ''],
+        ['Total Records', history.length, ''],
+        ['Portal', 'SRMAP - International Mess Pass Portal', ''],
+        ['', '', ''],
+        ['Action Summary', 'Count', ''],
+        ...Object.entries(
+          history.reduce((acc: Record<string, number>, record) => {
+            acc[record.actionType] = (acc[record.actionType] || 0) + 1;
+            return acc;
+          }, {})
+        ).map(([action, count]) => [action, count, '']),
+      ];
+
+      const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+      summarySheet['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 20 }];
+
+      // Create workbook with multiple sheets
+      XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+
+      // Save file
+      XLSX.writeFile(workbook, `admin-history-${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+      alert('Failed to generate Excel report');
+    }
+  };
+
   const actionColors: Record<string, { bg: string; text: string }> = {
     DELETE_PASS: { bg: '#fee2e2', text: '#dc2626' },
     DELETE_REQUEST: { bg: '#fee2e2', text: '#dc2626' },
@@ -127,9 +384,37 @@ export default function AdminHistory() {
 
   return (
     <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2" style={{ color: '#484622' }}>Admin Activity History</h1>
-        <p className="text-gray-600 mt-1">Track all administrative actions performed in the system</p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold mb-2" style={{ color: '#484622' }}>Admin Activity History</h1>
+          <p className="text-gray-600 mt-1">Track all administrative actions performed in the system</p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={generatePrintReport}
+            disabled={history.length === 0}
+            className="flex items-center gap-2 px-6 py-3 text-white rounded-lg font-semibold transition disabled:opacity-50"
+            style={{ backgroundColor: '#484622' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+            title="Print Report"
+          >
+            <Printer size={18} />
+            Print Report
+          </button>
+          <button
+            onClick={generateExcelReport}
+            disabled={history.length === 0}
+            className="flex items-center gap-2 px-6 py-3 text-white rounded-lg font-semibold transition disabled:opacity-50"
+            style={{ backgroundColor: '#16a34a' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#15803d'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16a34a'}
+            title="Download as Excel"
+          >
+            <Download size={18} />
+            Export (Excel)
+          </button>
+        </div>
       </div>
 
       {error && (
