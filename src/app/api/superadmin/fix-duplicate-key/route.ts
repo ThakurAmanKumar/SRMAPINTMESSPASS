@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import PassRequest from '@/models/PassRequest';
 import Counter from '@/models/Counter';
 import connectDB from '@/lib/mongodb';
