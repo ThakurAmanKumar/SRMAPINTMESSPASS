@@ -3,6 +3,8 @@ import dbConnect from '@/lib/mongodb';
 import SuperAdmin from '@/models/SuperAdmin';
 import { verifySuperAdminAuth, getClientIP } from '@/lib/superadmin-middleware';
 import { logAdminAction } from '@/lib/admin-action-logger';
+import { sendEmail } from '@/lib/mailer';
+import { getNewSuperAdminEmailHTML, getNewSuperAdminEmailText } from '@/lib/email-templates';
 import bcrypt from 'bcryptjs';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -80,6 +82,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     await newSuperAdmin.save();
+
+    // Send welcome email to new super admin (non-blocking)
+    try {
+      await sendEmail({
+        to: email,
+        subject: '🎉 Welcome to SRMAP Mess Pass Super Admin Panel',
+        html: getNewSuperAdminEmailHTML({
+          email,
+          createdByEmail: auth.payload!.email,
+        }),
+        text: getNewSuperAdminEmailText({
+          email,
+          createdByEmail: auth.payload!.email,
+        }),
+      });
+    } catch (emailError) {
+      console.error('Failed to send super admin welcome email:', emailError);
+      // Don't fail the request if email fails, but log it
+    }
 
     // Log action
     await logAdminAction({
