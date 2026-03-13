@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import PassRequest from '@/models/PassRequest';
+import Counter from '@/models/Counter';
 import connectDB from '@/lib/mongodb';
 import { sendAdminNotification } from '@/lib/mailer';
 
@@ -18,9 +19,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate unique request number
-    const count = await PassRequest.countDocuments();
-    const requestNumber = `REQSRMAPIMP${count + 1}`;
+    // Generate unique request number using atomic counter
+    const counter = await Counter.findOneAndUpdate(
+      { name: 'passRequestNumber' },
+      { $inc: { value: 1 } },
+      { new: true, upsert: true }
+    );
+    const requestNumber = `REQSRMAPIMP${counter.value}`;
 
     // Create new pass request
     const passRequest = new PassRequest({
