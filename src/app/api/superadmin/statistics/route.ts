@@ -6,6 +6,8 @@ import PassRequest from '@/models/PassRequest';
 import { verifySuperAdminAuth } from '@/lib/superadmin-middleware';
 import { getActivityStats } from '@/lib/admin-action-logger';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const auth = await verifySuperAdminAuth(request);

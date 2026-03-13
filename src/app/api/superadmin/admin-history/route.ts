@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import { verifySuperAdminAuth } from '@/lib/superadmin-middleware';
 import { getAllActionHistory } from '@/lib/admin-action-logger';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const auth = await verifySuperAdminAuth(request);
