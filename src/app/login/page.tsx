@@ -68,11 +68,11 @@ export default function LoginPage() {
       // Store token in localStorage
       localStorage.setItem('authToken', response.data.token);
 
-      // Redirect to dashboard
+      // Keep loading state active during redirect
       router.push('/dashboard');
+      // Don't clear loading state - let it persist through redirect
     } catch (err: any) {
       setError(err.response?.data?.error || 'OTP verification failed');
-    } finally {
       setLoading(false);
     }
   };
