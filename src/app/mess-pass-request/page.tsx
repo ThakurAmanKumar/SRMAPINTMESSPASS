@@ -687,8 +687,21 @@ export default function MessPassRequestPage() {
           </div>
 
           <div className="pt-4 border-t border-white/20 text-center">
-            <p className="text-white/60 text-xs">
+            <p className="text-white/60 text-xs mb-2">
               © {new Date().getFullYear()} SRMAP International Mess Committee. All rights reserved.
+            </p>
+            <p className="text-white/60 text-xs">
+              Developed by:{' '}
+              <a 
+                href="https://www.amankumarthakur.com.np/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="Visit Aman Kumar Thakur's Portfolio"
+                className="hover:text-[#16a34a] hover:underline transition-colors duration-200 font-semibold"
+                style={{ color: '#b7b4a0' }}
+              >
+                Mr. AT
+              </a>
             </p>
           </div>
         </div>
