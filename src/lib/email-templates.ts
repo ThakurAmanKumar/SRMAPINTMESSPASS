@@ -424,7 +424,11 @@ export function getNewAdminEmailHTML(params: NewAdminEmailParams): string {
             <!-- Quick Start Button -->
             <div style="text-align: center; margin: 30px 0;">
               <p style="margin: 0 0 15px 0; font-weight: bold;">Ready to get started?</p>
-              <a href="${loginURL}" class="action-button">Go to Login Portal</a>
+              <a href="${loginURL}" class="action-button" style="color: white !important;">Go to Login Portal</a>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+              <p style="margin: 0; color: #666; font-size: 14px;">Portal URL: <strong style="color: #484622;">https://srmapimpass.indevs.in</strong></p>
             </div>
 
             <p style="margin-top: 30px; color: #666;">If you have any questions or need assistance, please contact the Super Administrator.</p>
@@ -486,6 +490,8 @@ STEPS TO SETUP YOUR CREDENTIALS:
 
 QUICK START:
 ${loginURL}
+
+Portal URL: https://srmapimpass.indevs.in
 
 If you have any questions or need assistance, please contact the Super Administrator.
 
