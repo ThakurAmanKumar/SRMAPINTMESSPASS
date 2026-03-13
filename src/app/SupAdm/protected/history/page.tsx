@@ -54,16 +54,7 @@ export default function AdminHistory() {
   }, []);
 
   const fetchAdmins = async () => {
-    try {
-      const token = localStorage.getItem('superadmin-token');
-      const response = await axios.get('/api/superadmin/admins', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const adminEmails = response.data.admins.map((a: any) => a.email);
-      setAdmins(adminEmails);
-    } catch (err) {
-      console.error('Failed to fetch admins:', err);
-    }
+    // Admins will be populated from history data - no separate fetch needed
   };
 
   const fetchHistory = useCallback(async () => {
@@ -82,6 +73,14 @@ export default function AdminHistory() {
       });
 
       setHistory(response.data.history);
+      
+      // Extract unique admin emails from history to populate the filter
+      const adminEmailsSet = new Set<string>();
+      response.data.history.forEach((record: HistoryRecord) => {
+        adminEmailsSet.add(record.adminEmail);
+      });
+      setAdmins(Array.from(adminEmailsSet).sort());
+      
       setError('');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to fetch history');
@@ -92,7 +91,6 @@ export default function AdminHistory() {
 
   useEffect(() => {
     fetchHistory();
-    fetchAdmins();
   }, [fetchHistory]);
 
   const handleDeletedDocumentClick = async (record: HistoryRecord) => {
@@ -390,9 +388,6 @@ export default function AdminHistory() {
     REVOKE_PASS: { bg: '#fed7aa', text: '#ea580c' },
     APPROVE_REQUEST: { bg: '#dcfce7', text: '#16a34a' },
     REJECT_REQUEST: { bg: '#fef3c7', text: '#ca8a04' },
-    CREATE_ADMIN: { bg: '#dbeafe', text: '#0284c7' },
-    DELETE_ADMIN: { bg: '#fee2e2', text: '#dc2626' },
-    UPDATE_ADMIN: { bg: '#e9d5ff', text: '#7c3aed' },
     OTHER: { bg: '#f3f4f6', text: '#374151' },
   };
 
@@ -466,8 +461,6 @@ export default function AdminHistory() {
               <option value="REVOKE_PASS">Revoke Pass</option>
               <option value="APPROVE_REQUEST">Approve Request</option>
               <option value="REJECT_REQUEST">Reject Request</option>
-              <option value="CREATE_ADMIN">Create Admin</option>
-              <option value="DELETE_ADMIN">Delete Admin</option>
             </select>
           </div>
 

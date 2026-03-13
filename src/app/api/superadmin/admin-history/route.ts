@@ -20,11 +20,29 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     await connectDB();
 
-    const filters: any = {};
-    if (adminEmail) filters.adminEmail = adminEmail;
-    if (actionType) filters.actionType = actionType;
+    // Build filters - exclude super admin management activities
+    const mongoQuery: any = {
+      actionType: {
+        $nin: ['CREATE_ADMIN', 'DELETE_ADMIN', 'UPDATE_ADMIN']
+      }
+    };
 
-    const history = await getAllActionHistory(limit, skip, filters);
+    if (adminEmail) {
+      mongoQuery.adminEmail = adminEmail.toLowerCase();
+    }
+
+    if (actionType && !['CREATE_ADMIN', 'DELETE_ADMIN', 'UPDATE_ADMIN'].includes(actionType)) {
+      mongoQuery.actionType = actionType;
+    }
+
+    // Fetch history directly from database instead of using getAllActionHistory
+    // to support complex query filtering
+    const history = await (await import('@/models/AdminHistory')).default
+      .find(mongoQuery)
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip)
+      .lean();
 
     return NextResponse.json(
       {
