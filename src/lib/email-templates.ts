@@ -23,7 +23,7 @@ export interface PassRejectedEmailParams {
  * Generate HTML email for approved pass
  */
 export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): string {
-  const statusLink = 'https://srmapimpass.indevs.in/mess-pass-request#status';
+  const statusLink = 'https://srmapimpass.indevs.in';
   
   return `
     <!DOCTYPE html>
@@ -56,7 +56,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
         <div class="container">
           <!-- Header -->
           <div class="header">
-            <h1>✓ Pass Approved!</h1>
+            <h1>Pass Approved!</h1>
             <p>Your International Mess Pass Request Has Been Approved</p>
           </div>
 
@@ -103,6 +103,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
             <div class="info-box">
               <p><strong>📌 Next Steps:</strong></p>
               <p>1. Visit: <a href="${statusLink}" style="color: #f59e0b; text-decoration: none;">${statusLink}</a></p>
+              <p>- Click "Check Status" to view your status</p>
               <p>2. Check your status using Request Number: <strong>${params.requestNumber}</strong></p>
               <p>3. Download your pass (HTML file with print-to-PDF option)</p>
               <p>4. Print to PDF or save as image, then present at the International Mess</p>
@@ -133,7 +134,7 @@ export function getPassApprovedEmailHTML(params: PassApprovedEmailParams): strin
  * Generate text email for approved pass
  */
 export function getPassApprovedEmailText(params: PassApprovedEmailParams): string {
-  const statusLink = 'https://srmapimpass.indevs.in/mess-pass-request#status';
+  const statusLink = 'https://srmapimpass.indevs.in';
   
   return `
 INTERNATIONAL MESS PASS - APPROVED
@@ -154,7 +155,8 @@ Visit: ${statusLink}
 Use Request Number: ${params.requestNumber}
 
 NEXT STEPS:
-1. Go to the link above
+1. Visit: ${statusLink}
+- Click "Check Status" to view your status
 2. Enter your request number
 3. Download your pass (printable HTML file)
 4. Print to PDF or save as image
