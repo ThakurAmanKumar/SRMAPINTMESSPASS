@@ -56,8 +56,8 @@ export async function GET(
         try {
           const passRequest = await PassRequest.findOne({ 
             fullName: new RegExp(`^${studentMatch[1].trim()}$`, 'i') 
-          }).lean();
-          if (passRequest && passRequest.registrationNumber && passRequest.registrationNumber !== 'No') {
+          }).lean() as { registrationNumber?: string } | null;
+          if (passRequest?.registrationNumber && passRequest.registrationNumber !== 'No') {
             registrationNumber = passRequest.registrationNumber;
           }
         } catch (err) {
@@ -89,8 +89,8 @@ export async function GET(
         try {
           const passRequest = await PassRequest.findOne({ 
             requestNumber: reqMatch[1].trim() 
-          }).lean();
-          if (passRequest && passRequest.registrationNumber && passRequest.registrationNumber !== 'No') {
+          }).lean() as { registrationNumber?: string } | null;
+          if (passRequest?.registrationNumber && passRequest.registrationNumber !== 'No') {
             registrationNumber = passRequest.registrationNumber;
           }
         } catch (err) {

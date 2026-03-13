@@ -1,4 +1,7 @@
 import nodemailer from 'nodemailer';
+import connectDB from './mongodb';
+import Admin from '@/models/Admin';
+import SuperAdmin from '@/models/SuperAdmin';
 
 // Create transporter once and reuse it
 let transporter: nodemailer.Transporter | null = null;
@@ -75,26 +78,54 @@ export async function sendEmail(options: EmailOptions) {
 }
 
 /**
- * Parse admin emails from environment variable
- * Supports comma-separated emails: "email1@gmail.com,email2@gmail.com"
- * @returns Array of admin email addresses
+ * Parse admin emails from environment variable or database
+ * Fetches all admin emails and excludes superadmin emails
+ * @returns Array of admin email addresses (excluding superadmins)
  */
-function getAdminEmails(): string[] {
-  const adminEmailStr = process.env.ADMIN_EMAIL;
+async function getAdminEmails(): Promise<string[]> {
+  try {
+    // Connect to database
+    await connectDB();
 
-  if (!adminEmailStr) {
-    throw new Error('ADMIN_EMAIL is not configured');
+    // Fetch all admin emails
+    const admins = await Admin.find({}, { email: 1 });
+    const adminEmails = admins.map((admin) => admin.email);
+
+    // Fetch all superadmin emails
+    const superAdmins = await SuperAdmin.find({}, { email: 1 });
+    const superAdminEmails = new Set(superAdmins.map((sa) => sa.email));
+
+    // Filter out superadmin emails
+    const filteredEmails = adminEmails.filter(
+      (email) => !superAdminEmails.has(email)
+    );
+
+    if (filteredEmails.length === 0) {
+      console.warn('No admin emails found (excluding superadmins)');
+      return [];
+    }
+
+    console.log(
+      `Found ${filteredEmails.length} admin emails (excluded ${superAdminEmails.size} superadmin emails)`
+    );
+    return filteredEmails;
+  } catch (error) {
+    console.error('Error fetching admin emails:', error);
+    // Fallback to environment variable if database fails
+    const adminEmailStr = process.env.ADMIN_EMAIL;
+    if (adminEmailStr) {
+      return adminEmailStr
+        .split(',')
+        .map((email) => email.trim())
+        .filter((email) => email.length > 0);
+    }
+    return [];
   }
-
-  return adminEmailStr
-    .split(',')
-    .map((email) => email.trim())
-    .filter((email) => email.length > 0);
 }
 
 /**
  * Send admin notification for new pass request
- * Sends notification to all configured admin emails
+ * Sends notification to all admin emails (excluding superadmins)
  * @param studentName Student full name
  * @param registrationNumber Student registration number
  * @returns Promise with send results
@@ -103,7 +134,7 @@ export async function sendAdminNotification(
   studentName: string,
   registrationNumber: string
 ) {
-  const adminEmails = getAdminEmails();
+  const adminEmails = await getAdminEmails();
 
   const htmlContent = `
 <!DOCTYPE html>
