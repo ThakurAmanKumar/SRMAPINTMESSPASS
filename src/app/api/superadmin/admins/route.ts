@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import Admin from '@/models/Admin';
 import { verifySuperAdminAuth, getClientIP } from '@/lib/superadmin-middleware';
 import { logAdminAction } from '@/lib/admin-action-logger';
+import { sendEmail } from '@/lib/mailer';
+import { getNewAdminEmailHTML, getNewAdminEmailText } from '@/lib/email-templates';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -69,6 +71,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     await newAdmin.save();
+
+    // Send welcome email to new admin (non-blocking)
+    try {
+      await sendEmail({
+        to: email,
+        subject: '🎉 Welcome to SRMAP Mess Pass Admin Panel',
+        html: getNewAdminEmailHTML({
+          email,
+          createdByEmail: auth.payload!.email,
+        }),
+        text: getNewAdminEmailText({
+          email,
+          createdByEmail: auth.payload!.email,
+        }),
+      });
+    } catch (emailError) {
+      console.error('Failed to send admin welcome email:', emailError);
+      // Don't fail the request if email fails, but log it
+    }
 
     // Log the action
     await logAdminAction({
