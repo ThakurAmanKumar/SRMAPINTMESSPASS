@@ -93,23 +93,67 @@ export default function AdminHistory() {
     fetchHistory();
   }, [fetchHistory]);
 
-  const handleDeletedDocumentClick = async (record: HistoryRecord) => {
-    if (record.actionType !== 'DELETE_PASS' && record.actionType !== 'DELETE_REQUEST') {
+  const handleRecordDetailClick = async (record: HistoryRecord) => {
+    const clickableActions = ['DELETE_PASS', 'DELETE_REQUEST', 'APPROVE_REQUEST', 'REJECT_REQUEST'];
+    if (!clickableActions.includes(record.actionType)) {
       return;
     }
 
     try {
       setModalLoading(true);
       const token = localStorage.getItem('superadmin-token');
-      const response = await axios.get(`/api/superadmin/deleted-document/${record._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setSelectedDocument(response.data.document);
+      
+      // For DELETE actions, fetch from deleted-document endpoint
+      if (record.actionType === 'DELETE_PASS' || record.actionType === 'DELETE_REQUEST') {
+        const response = await axios.get(`/api/superadmin/deleted-document/${record._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSelectedDocument(response.data.document);
+      } else if (record.actionType === 'APPROVE_REQUEST' || record.actionType === 'REJECT_REQUEST') {
+        // For APPROVE/REJECT, extract ID from actionDetails or targetId
+        let docId = record.targetId;
+        
+        // Fetch the pass request or pass details
+        let response;
+        try {
+          // Try to fetch as pass request first (for APPROVE_REQUEST/REJECT_REQUEST)
+          response = await axios.get(`/api/pass-requests/${docId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setSelectedDocument({
+            type: 'Pass Request Document',
+            requestNumber: response.data.requestNumber || response.data._id,
+            studentName: response.data.studentName || 'N/A',
+            registrationNumber: response.data.registrationNumber || 'N/A',
+            messStartDate: response.data.messStartDate || 'N/A',
+            messEndDate: response.data.messEndDate || 'N/A',
+            status: response.data.status,
+            reason: response.data.reason || 'N/A',
+            fullDetails: JSON.stringify(response.data, null, 2),
+            // Add approval/rejection details
+            actionType: record.actionType,
+            actionBy: record.adminEmail,
+            actionAt: record.createdAt,
+            actionDetails: record.actionDetails,
+          });
+        } catch (innerErr) {
+          // If that fails, just show the action details
+          setSelectedDocument({
+            type: record.actionType === 'APPROVE_REQUEST' ? 'Approved Request' : 'Rejected Request',
+            information: record.actionDetails,
+            // Add approval/rejection details
+            actionType: record.actionType,
+            actionBy: record.adminEmail,
+            actionAt: record.createdAt,
+            actionDetails: record.actionDetails,
+          });
+        }
+      }
+      
       setShowModal(true);
     } catch (err: any) {
-      console.error('Failed to fetch deleted document:', err);
-      alert('Failed to load deleted document details: ' + (err.response?.data?.error || 'Unknown error'));
+      console.error('Failed to fetch document details:', err);
+      alert('Failed to load details: ' + (err.response?.data?.error || 'Unknown error'));
     } finally {
       setModalLoading(false);
     }
@@ -528,7 +572,7 @@ export default function AdminHistory() {
               <tbody>
                 {history.map((record, index) => {
                   const colors = actionColors[record.actionType] || actionColors.OTHER;
-                  const isDeletable = record.actionType === 'DELETE_PASS' || record.actionType === 'DELETE_REQUEST';
+                  const isClickable = ['DELETE_PASS', 'DELETE_REQUEST', 'APPROVE_REQUEST', 'REJECT_REQUEST'].includes(record.actionType);
                   const isSeen = seenRecords.has(record._id);
                   const baseBackgroundColor = isSeen ? '#f5f4f0' : (index % 2 === 0 ? 'white' : '#fafaf9');
                   const seenBorderColor = isSeen ? '#484622' : 'transparent';
@@ -540,12 +584,12 @@ export default function AdminHistory() {
                         borderBottom: '1px solid #d1d5db',
                         borderLeft: `4px solid ${seenBorderColor}`,
                         backgroundColor: baseBackgroundColor,
-                        cursor: isDeletable ? 'pointer' : 'default',
+                        cursor: isClickable ? 'pointer' : 'default',
                         transition: 'all 0.2s ease',
                       }}
-                      onClick={() => isDeletable && handleDeletedDocumentClick(record)}
+                      onClick={() => isClickable && handleRecordDetailClick(record)}
                       onMouseEnter={(e) => {
-                        if (isDeletable) {
+                        if (isClickable) {
                           e.currentTarget.style.backgroundColor = '#fef3c7';
                         } else {
                           e.currentTarget.style.backgroundColor = isSeen ? '#ebe7df' : (index % 2 === 0 ? '#efeee3' : '#ddd9cc');
@@ -568,7 +612,7 @@ export default function AdminHistory() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-gray-700 max-w-xs truncate text-sm" style={{ borderRight: '1px solid #d1d5db' }} title={record.actionDetails}>
-                        {isDeletable ? (
+                        {isClickable ? (
                           <span className="underline font-medium hover:font-bold transition">{record.actionDetails}</span>
                         ) : (
                           record.actionDetails
@@ -646,7 +690,11 @@ export default function AdminHistory() {
             {/* Modal Header */}
             <div className="sticky top-0 flex justify-between items-center p-6 border-b" style={{ backgroundColor: '#efeee3', borderColor: '#d1d5db' }}>
               <h2 className="text-2xl font-bold" style={{ color: '#484622' }}>
-                Deleted Document Details
+                {selectedDocument?.type === 'Pass Document' || selectedDocument?.type === 'Deleted Pass'
+                  ? 'Pass Details'
+                  : selectedDocument?.type === 'Pass Request Document' || selectedDocument?.type === 'Deleted Request'
+                  ? 'Request Details'
+                  : 'Document Details'}
               </h2>
               <button
                 onClick={() => {
@@ -681,11 +729,11 @@ export default function AdminHistory() {
                   </div>
 
                   {/* Document Details Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
                     {/* Pass/Request Number */}
                     {(selectedDocument.passNumber || selectedDocument.requestNumber) && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">
                           {selectedDocument.passNumber ? 'Pass Number' : 'Request Number'}
                         </p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
@@ -696,8 +744,8 @@ export default function AdminHistory() {
 
                     {/* Student Name */}
                     {selectedDocument.studentName && selectedDocument.studentName !== 'N/A' && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Student Name</p>
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">Student Name</p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
                           {selectedDocument.studentName}
                         </p>
@@ -706,8 +754,8 @@ export default function AdminHistory() {
 
                     {/* Registration Number */}
                     {selectedDocument.registrationNumber && selectedDocument.registrationNumber !== 'N/A' && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Registration Number</p>
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">Registration Number</p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
                           {selectedDocument.registrationNumber}
                         </p>
@@ -716,8 +764,8 @@ export default function AdminHistory() {
 
                     {/* Mess Start Date */}
                     {selectedDocument.messStartDate && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Mess Start Date</p>
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">Mess Start Date</p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
                           {selectedDocument.messStartDate}
                         </p>
@@ -726,34 +774,94 @@ export default function AdminHistory() {
 
                     {/* Mess End Date */}
                     {selectedDocument.messEndDate && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Mess End Date</p>
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">Mess End Date</p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
                           {selectedDocument.messEndDate}
                         </p>
                       </div>
                     )}
 
-                    {/* Deleted By */}
-                    {selectedDocument.deletedBy && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Deleted By</p>
-                        <p className="text-sm font-bold break-words" style={{ color: '#484622', wordBreak: 'break-all' }}>
-                          {selectedDocument.deletedBy}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Deleted At */}
-                    {selectedDocument.deletedAt && (
-                      <div className="p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
-                        <p className="text-sm text-gray-600 mb-1">Deleted At</p>
+                    {/* Status */}
+                    {selectedDocument.status && (
+                      <div className="flex justify-between items-center p-4 rounded-lg" style={{ backgroundColor: '#f3f4f6' }}>
+                        <p className="text-sm text-gray-600 font-semibold">Status</p>
                         <p className="text-lg font-bold" style={{ color: '#484622' }}>
-                          {new Date(selectedDocument.deletedAt).toLocaleString('en-IN')}
+                          {selectedDocument.status}
                         </p>
                       </div>
                     )}
                   </div>
+
+                  {/* Deletion Details Section */}
+                  {selectedDocument.deletedBy && (selectedDocument.deletedBy || selectedDocument.deletedAt) && (
+                    <div className="mt-6 p-4 rounded-lg border-l-4" style={{ backgroundColor: '#fee2e2', borderColor: '#dc2626' }}>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>
+                            Deleted By
+                          </p>
+                          <p className="text-lg font-bold break-words mt-1" style={{ color: '#484622', wordBreak: 'break-all' }}>
+                            {selectedDocument.deletedBy || 'Unknown'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>
+                            Deletion Date
+                          </p>
+                          <p className="text-lg font-bold mt-1" style={{ color: '#484622' }}>
+                            {selectedDocument.deletedAt ? new Date(selectedDocument.deletedAt).toLocaleString('en-IN') : 'N/A'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>
+                            Status
+                          </p>
+                          <p className="text-lg font-bold mt-1" style={{ color: '#484622' }}>
+                            Deleted
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Approval/Rejection Details Section */}
+                  {selectedDocument.actionType && (selectedDocument.actionType === 'APPROVE_REQUEST' || selectedDocument.actionType === 'REJECT_REQUEST') && (
+                    <div className="mt-6 p-4 rounded-lg border-l-4" style={{ backgroundColor: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#dcfce7' : '#fef3c7', borderColor: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#16a34a' : '#ca8a04' }}>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#16a34a' : '#ca8a04' }}>
+                            {selectedDocument.actionType === 'APPROVE_REQUEST' ? 'Approved By' : 'Rejected By'}
+                          </p>
+                          <p className="text-lg font-bold break-words mt-1" style={{ color: '#484622', wordBreak: 'break-all' }}>
+                            {selectedDocument.actionBy || 'Unknown'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#16a34a' : '#ca8a04' }}>
+                            {selectedDocument.actionType === 'APPROVE_REQUEST' ? 'Approval Date' : 'Rejection Date'}
+                          </p>
+                          <p className="text-lg font-bold mt-1" style={{ color: '#484622' }}>
+                            {selectedDocument.actionAt ? new Date(selectedDocument.actionAt).toLocaleString('en-IN') : 'N/A'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#16a34a' : '#ca8a04' }}>
+                            Status
+                          </p>
+                          <p className="text-lg font-bold mt-1" style={{ color: '#484622' }}>
+                            {selectedDocument.actionType === 'APPROVE_REQUEST' ? 'Approved' : 'Rejected'}
+                          </p>
+                        </div>
+                      </div>
+                      {selectedDocument.actionDetails && (
+                        <div className="mt-4 pt-4 border-t" style={{ borderColor: selectedDocument.actionType === 'APPROVE_REQUEST' ? 'rgba(22, 163, 74, 0.3)' : 'rgba(202, 138, 4, 0.3)' }}>
+                          <p className="text-sm font-semibold mb-2" style={{ color: selectedDocument.actionType === 'APPROVE_REQUEST' ? '#16a34a' : '#ca8a04' }}>Details</p>
+                          <p className="text-sm text-gray-700 break-words">{selectedDocument.actionDetails}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Full Details Section */}
                   {selectedDocument.fullDetails && (
