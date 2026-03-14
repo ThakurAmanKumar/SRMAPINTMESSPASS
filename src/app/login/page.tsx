@@ -569,14 +569,6 @@ export default function LoginPage() {
             </button>
           </form>
         )}
-
-        {/* Setup Instructions */}
-        {step === 'credentials' && (
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-xs text-gray-600 font-semibold mb-2">First Time Admin Setup:</p>
-            <p className="text-xs text-gray-600">Use your admin email and password configured in environment variables. If you don&apos;t have an admin account, contact your system administrator.</p>
-          </div>
-        )}
       </div>
     </div>
   );
