@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Users, FileText, History, AlertCircle, Database, Shield } from 'lucide-react';
+import { Users, FileText, History, AlertCircle, Database, Shield, LayoutDashboard } from 'lucide-react';
 
 interface Statistics {
   totalAdmins: number;
@@ -194,7 +194,7 @@ export default function SuperAdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <a
           href="/SupAdm/protected/admins"
           className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
@@ -220,6 +220,18 @@ export default function SuperAdminDashboard() {
         </a>
 
         <a
+          href="/SupAdm/protected/superadmins"
+          className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
+          style={{ backgroundColor: '#484622' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+        >
+          <Shield size={24} className="mx-auto mb-1.5" />
+          <p className="font-semibold text-sm">Super Admins</p>
+          <p className="text-xs mt-0.5 opacity-90">Manage super administrators</p>
+        </a>
+
+        <a
           href="/"
           className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
           style={{ backgroundColor: '#484622' }}
@@ -232,15 +244,15 @@ export default function SuperAdminDashboard() {
         </a>
 
         <a
-          href="/SupAdm/protected/superadmins"
+          href="/login"
           className="text-white rounded-lg p-4 text-center transition transform hover:scale-105 shadow-md"
           style={{ backgroundColor: '#484622' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
         >
-          <Shield size={24} className="mx-auto mb-1.5" />
-          <p className="font-semibold text-sm">Super Admins</p>
-          <p className="text-xs mt-0.5 opacity-90">Manage super administrators</p>
+          <LayoutDashboard size={24} className="mx-auto mb-1.5" />
+          <p className="font-semibold text-sm">Admin Portal</p>
+          <p className="text-xs mt-0.5 opacity-90">Access admin dashboard</p>
         </a>
       </div>
     </div>
