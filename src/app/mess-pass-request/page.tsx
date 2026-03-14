@@ -686,6 +686,32 @@ export default function MessPassRequestPage() {
             </div>
           </div>
 
+          {/* Admin Portals Section */}
+          <div className="pt-4 pb-4 border-t border-white/20 opacity-50 hover:opacity-100 transition-opacity duration-300">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 max-w-4xl mx-auto">
+              {/* Admin Panel Link */}
+              <a
+                href="/login"
+                className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+              >
+                <Shield size={14} />
+                <span className="font-medium">Admin Panel</span>
+              </a>
+
+              {/* Divider */}
+              <div className="hidden md:block w-px h-4 bg-white/20"></div>
+
+              {/* Super Admin Link */}
+              <a
+                href="/SupAdm/login"
+                className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+              >
+                <Activity size={14} />
+                <span className="font-medium">Super Admin</span>
+              </a>
+            </div>
+          </div>
+
           <div className="pt-4 border-t border-white/20 text-center">
             <p className="text-white/60 text-xs mb-2">
               © {new Date().getFullYear()} SRMAP International Mess Committee. All rights reserved.
