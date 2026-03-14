@@ -243,7 +243,7 @@ export default function DashboardPage() {
             {/* Interactive Stat Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Total Passes Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 group" style={{ borderColor: '#484622' }}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
                     <CheckCircle size={28} style={{ color: '#484622' }} />
@@ -259,7 +259,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Today's Passes Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 group" style={{ borderColor: '#484622' }}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
                     <BarChart3 size={28} style={{ color: '#484622' }} />
@@ -275,7 +275,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Total Students Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 group" style={{ borderColor: '#484622' }}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
                     <Users size={28} style={{ color: '#484622' }} />
