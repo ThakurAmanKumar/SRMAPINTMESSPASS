@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
-import { AlertCircle, X, Download, Printer, Eye, EyeOff, Check } from 'lucide-react';
+import { AlertCircle, X, Download, Printer, Eye, EyeOff, Check, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 interface HistoryRecord {
@@ -551,6 +551,20 @@ export default function AdminHistory() {
         >
           <Download size={14} />
           Excel
+        </button>
+        <button
+          onClick={() => {
+            fetchHistory();
+          }}
+          disabled={loading}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-white rounded-md font-medium transition disabled:opacity-50 text-sm ml-auto"
+          style={{ backgroundColor: '#484622' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3419'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#484622'}
+          title="Refresh table"
+        >
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+          Refresh
         </button>
       </div>
 
