@@ -86,7 +86,7 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
         <div className="max-w-full px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3 sm:space-x-4">
             <button
@@ -126,7 +126,7 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden relative">
+      <div className="flex flex-1 relative overflow-hidden" style={{ height: 'calc(100vh - 73px)' }}>
         {/* Mobile Backdrop */}
         {isMobile && sidebarOpen && (
           <div
@@ -137,12 +137,12 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
 
         {/* Sidebar */}
         <aside
-          className={`border-r border-gray-200 transition-all duration-300 overflow-y-auto
+          className={`border-r border-gray-200 transition-all duration-300 
             ${isMobile 
-              ? `fixed left-0 top-20 bottom-0 w-64 z-40 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}` 
-              : `hidden md:flex flex-col ${desktopCollapsed ? 'w-24' : 'w-64'}`
+              ? `fixed left-0 bottom-0 w-64 z-40 transform overflow-y-auto pt-20 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}` 
+              : `fixed left-0 bottom-0 z-30 flex flex-col overflow-y-auto ${desktopCollapsed ? 'w-24' : 'w-64'}`
             }`}
-          style={{ backgroundColor: '#efeee3' }}
+          style={{ backgroundColor: '#efeee3', top: '73px' }}
         >
           {!isMobile && (
             <div className="flex justify-end p-2 border-b border-gray-300">
@@ -192,7 +192,7 @@ export default function ProtectedSuperAdminLayout({ children }: { children: Reac
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto w-full">
+        <main className={`flex-1 overflow-auto w-full transition-all duration-300 ${isMobile ? '' : desktopCollapsed ? 'md:ml-24' : 'md:ml-64'}`}>
           {children}
         </main>
       </div>
