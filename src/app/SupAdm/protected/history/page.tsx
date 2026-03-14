@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
-import { AlertCircle, X, Download, Printer, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, X, Download, Printer, Eye, EyeOff, Check } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 interface HistoryRecord {
@@ -39,7 +39,7 @@ export default function AdminHistory() {
   const [modalLoading, setModalLoading] = useState(false);
   const [seenRecords, setSeenRecords] = useState<Set<string>>(new Set());
   const tableRef = useRef<HTMLDivElement>(null);
-  const limit = 20;
+  const limit = 8;
 
   // Load seen records from localStorage on mount
   useEffect(() => {
@@ -555,18 +555,18 @@ export default function AdminHistory() {
       </div>
 
       {/* History Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4" style={{ borderColor: '#484622' }}>
+      <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4 mb-8" style={{ borderColor: '#484622' }}>
         {history.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead style={{ backgroundColor: '#efeee3' }}>
                 <tr style={{ borderBottom: '2px solid #484622' }}>
-                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>S.No</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>Admin Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>Action Type</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>Details</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>Date & Time</th>
-                  <th className="px-6 py-4 text-center text-sm font-bold" style={{ color: '#484622' }}>Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>S.NO</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>ADMIN EMAIL</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>ACTION TYPE</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>DETAILS</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold" style={{ color: '#484622', borderRight: '1px solid #d1d5db' }}>DATE</th>
+                  <th className="px-6 py-4 text-right text-sm font-bold" style={{ color: '#484622' }}>ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
@@ -574,33 +574,23 @@ export default function AdminHistory() {
                   const colors = actionColors[record.actionType] || actionColors.OTHER;
                   const isClickable = ['DELETE_PASS', 'DELETE_REQUEST', 'APPROVE_REQUEST', 'REJECT_REQUEST'].includes(record.actionType);
                   const isSeen = seenRecords.has(record._id);
-                  const baseBackgroundColor = isSeen ? '#f5f4f0' : (index % 2 === 0 ? 'white' : '#fafaf9');
-                  const seenBorderColor = isSeen ? '#484622' : 'transparent';
                   
                   return (
                     <tr
                       key={record._id}
                       style={{ 
                         borderBottom: '1px solid #d1d5db',
-                        borderLeft: `4px solid ${seenBorderColor}`,
-                        backgroundColor: baseBackgroundColor,
+                        backgroundColor: index % 2 === 0 ? 'white' : '#fafaf9',
                         cursor: isClickable ? 'pointer' : 'default',
-                        transition: 'all 0.2s ease',
                       }}
                       onClick={() => isClickable && handleRecordDetailClick(record)}
-                      onMouseEnter={(e) => {
-                        if (isClickable) {
-                          e.currentTarget.style.backgroundColor = '#fef3c7';
-                        } else {
-                          e.currentTarget.style.backgroundColor = isSeen ? '#ebe7df' : (index % 2 === 0 ? '#efeee3' : '#ddd9cc');
-                        }
-                      }}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = baseBackgroundColor}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#efeee3'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = index % 2 === 0 ? 'white' : '#fafaf9'}
                     >
                       <td className="px-6 py-4 text-gray-800 font-semibold text-sm" style={{ borderRight: '1px solid #d1d5db' }}>
                         {((page - 1) * limit) + index + 1}
                       </td>
-                      <td className="px-6 py-4 text-gray-800 font-medium text-sm" style={{ borderRight: '1px solid #d1d5db' }}>
+                      <td className="px-6 py-4 text-gray-800 font-medium text-sm max-w-xs truncate" title={record.adminEmail} style={{ borderRight: '1px solid #d1d5db' }}>
                         {record.adminEmail}
                       </td>
                       <td className="px-6 py-4" style={{ borderRight: '1px solid #d1d5db' }}>
@@ -611,9 +601,9 @@ export default function AdminHistory() {
                           {record.actionType}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-700 max-w-xs truncate text-sm" style={{ borderRight: '1px solid #d1d5db' }} title={record.actionDetails}>
+                      <td className="px-6 py-4 text-gray-700 text-sm max-w-md truncate" title={record.actionDetails} style={{ borderRight: '1px solid #d1d5db' }}>
                         {isClickable ? (
-                          <span className="underline font-medium hover:font-bold transition">{record.actionDetails}</span>
+                          <span className="underline font-medium cursor-pointer hover:font-bold">{record.actionDetails}</span>
                         ) : (
                           record.actionDetails
                         )}
@@ -625,22 +615,28 @@ export default function AdminHistory() {
                           day: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
-                          second: '2-digit',
                         })}
                       </td>
-                      <td className="px-6 py-4 text-center" style={{ borderRight: '1px solid #d1d5db' }}>
+                      <td className="px-6 py-4 text-right">
                         <button
                           onClick={(e) => toggleSeenStatus(e, record._id)}
-                          className="inline-flex items-center justify-center p-2 rounded-lg transition"
-                          style={{ 
-                            backgroundColor: isSeen ? '#484622' : '#e5e7eb',
-                            color: isSeen ? 'white' : '#6b7280'
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isSeen ? '#3a3419' : '#d1d5db'}
-                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isSeen ? '#484622' : '#e5e7eb'}
-                          title={isSeen ? 'Mark as unseen' : 'Mark as seen'}
+                          className="font-medium flex items-center space-x-1 transition px-2 py-1 rounded ml-auto text-sm"
+                          style={{ color: isSeen ? '#16a34a' : '#dc2626' }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isSeen ? '#dcfce7' : '#fee2e2'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                          title={isSeen ? 'Click to mark as unseen' : 'Click to mark as seen'}
                         >
-                          {isSeen ? <Eye size={18} /> : <EyeOff size={18} />}
+                          {isSeen ? (
+                            <>
+                              <Check size={14} />
+                              <span>Seen</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye size={14} />
+                              <span>Not Seen</span>
+                            </>
+                          )}
                         </button>
                       </td>
                     </tr>
