@@ -243,12 +243,12 @@ export default function DashboardPage() {
             {/* Interactive Stat Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Total Passes Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 border-emerald-500 group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="bg-emerald-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                    <CheckCircle size={28} className="text-emerald-600" />
+                  <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
+                    <CheckCircle size={28} style={{ color: '#484622' }} />
                   </div>
-                  <div className="flex items-center gap-1 text-emerald-600 text-sm font-semibold">
+                  <div className="flex items-center gap-1 text-sm font-semibold" style={{ color: '#484622' }}>
                     <TrendingUp size={16} />
                     <span>+12%</span>
                   </div>
@@ -259,12 +259,12 @@ export default function DashboardPage() {
               </div>
 
               {/* Today's Passes Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 border-amber-500 group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="bg-amber-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                    <BarChart3 size={28} className="text-amber-600" />
+                  <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
+                    <BarChart3 size={28} style={{ color: '#484622' }} />
                   </div>
-                  <div className="flex items-center gap-1 text-amber-600 text-sm font-semibold">
+                  <div className="flex items-center gap-1 text-sm font-semibold" style={{ color: '#484622' }}>
                     <TrendingUp size={16} />
                     <span>+8%</span>
                   </div>
@@ -275,12 +275,12 @@ export default function DashboardPage() {
               </div>
 
               {/* Total Students Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 border-blue-500 group">
+              <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-l-4" style={{ borderColor: '#484622' }} className="group">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="bg-blue-100 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                    <Users size={28} className="text-blue-600" />
+                  <div className="p-3 rounded-xl group-hover:scale-110 transition-transform" style={{ backgroundColor: '#f0ede3' }}>
+                    <Users size={28} style={{ color: '#484622' }} />
                   </div>
-                  <div className="flex items-center gap-1 text-blue-600 text-sm font-semibold">
+                  <div className="flex items-center gap-1 text-sm font-semibold" style={{ color: '#484622' }}>
                     <TrendingUp size={16} />
                     <span>+5%</span>
                   </div>
